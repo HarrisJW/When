@@ -1,6 +1,6 @@
 package com.vaadin.vaadin_archetype_application;
 
-import javax.servlet.annotation.WebServlet;
+import com.vaadin.spring.annotation.SpringUI;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
@@ -20,6 +20,7 @@ import com.vaadin.ui.VerticalLayout;
  * overridden to add component to the user interface and initialize non-component functionality.
  */
 @Theme("mytheme")
+@SpringUI(path = "/ui/logon")
 public class MyUI extends UI {
 
 	// init() is the new main()
@@ -49,8 +50,8 @@ public class MyUI extends UI {
         setContent(layout);
     }
 
-    @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
-    @VaadinServletConfiguration(ui = MyUI.class, productionMode = false)
-    public static class MyUIServlet extends VaadinServlet {
-    }
+//    @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
+//    @VaadinServletConfiguration(ui = MyUI.class, productionMode = false)
+//    public static class MyUIServlet extends VaadinServlet {
+//    }
 }
