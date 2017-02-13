@@ -1,3 +1,8 @@
+/*
+ * This is not our class. This file, was taken from the open-source project located here:
+ * https://github.com/peholmst/google-oauth-vaadin-sample 
+ */
+
 package org.vaadin.example.oauth;
 
 import org.springframework.beans.factory.annotation.Autowired;
