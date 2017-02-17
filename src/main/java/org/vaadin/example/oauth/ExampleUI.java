@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Optional;
 
-@SpringUI(path = "/ui")
+@SpringUI(path = "/")
 public class ExampleUI extends UI {
 
     @Autowired
