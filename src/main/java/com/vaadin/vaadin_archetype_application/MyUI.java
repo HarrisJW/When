@@ -41,8 +41,9 @@ public class MyUI extends UI {
 
         // Add a new button to the interface. 
         Button button = new Button("Click Me");
-        String GGL_KEY = "CLIENT KEY HERE";
-        String GGL_SECRET = "CLIENT SECRET HERE";
+        String GGL_KEY = "955701574186-f8mole07i7gdb6mevst2hdbrq857sool.apps.googleusercontent.com";
+        String GGL_SECRET = "NbQmw6H9iTi7i8KmC5FudO4p";
+       
         OAuthPopupButton ob = new GoogleButton(GGL_KEY, GGL_SECRET, "https://www.googleapis.com/auth/calendar");
         ob.addOAuthListener(new OAuthListener() {
         	@Override
