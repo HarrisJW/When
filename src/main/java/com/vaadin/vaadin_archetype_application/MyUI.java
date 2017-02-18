@@ -49,19 +49,10 @@ public class MyUI extends UI {
     @Override
     protected void init(VaadinRequest vaadinRequest) {
         final VerticalLayout layout = new VerticalLayout();
-        
-        final TextField name = new TextField();
-        name.setCaption("Type your name here:");
 
-        // Add a new button to the interface. 
-        Button button = new Button("Click Me");
         String GGL_KEY = "955701574186-f8mole07i7gdb6mevst2hdbrq857sool.apps.googleusercontent.com";
         String GGL_SECRET = "NbQmw6H9iTi7i8KmC5FudO4p";
-<<<<<<< HEAD
-       
-        OAuthPopupButton ob = new GoogleButton(GGL_KEY, GGL_SECRET, "https://www.googleapis.com/auth/calendar");
-=======
-        
+   
         /* 
         It might be necessary in the future to use the below code.
         
@@ -75,7 +66,6 @@ public class MyUI extends UI {
         OAuthPopupButton ob = new GoogleButton(GGL_KEY, GGL_SECRET, "https://www.googleapis.com/auth/calendar "
         		+ "https://www.googleapis.com/auth/userinfo.email "
         		+ "https://www.googleapis.com/auth/userinfo.profile");
->>>>>>> branch 'google-sign-in' of https://github.com/HarrisJW/When.git
         ob.addOAuthListener(new OAuthListener() {
         	@Override
         	public void authSuccessful(Token token, boolean isOAuth20) {
@@ -126,16 +116,8 @@ public class MyUI extends UI {
         		System.out.println("DENIED");
         	}
         });
-
         
-        // Event object e. Add new component to layout.
-        // lambda function. Read up.
-        button.addClickListener( e -> {
-            layout.addComponent(new Label("Thanks " + name.getValue() 
-                    + ", it works!"));
-        });
-        
-        layout.addComponents(name, button, ob);
+        layout.addComponents(ob);
         layout.setMargin(true);
         layout.setSpacing(true);
         

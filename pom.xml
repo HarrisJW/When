@@ -108,6 +108,11 @@
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-themes</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.google.apis</groupId>
+			<artifactId>google-api-services-calendar</artifactId>
+			<version>v3-rev234-1.22.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>
