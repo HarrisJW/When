@@ -28,33 +28,20 @@ import com.vaadin.ui.VerticalLayout;
 
 public class LoginView extends Panel implements View {
 	
-	/**
-	 * 
-	 */
-	private OAuthPopupButton ob;
-	final VerticalLayout layout = new VerticalLayout();
+	protected OAuthPopupButton ob;
 	
-	public LoginView() {
-		Page.getCurrent().setTitle("Login");
-		setSizeFull();
-		layout.setSpacing(true);
-		layout.setMargin(true);
-		addGoogleButton();
-		layout.addComponent(ob);
-		setContent(layout);
+	final VerticalLayout layout;
+
+	protected GoogleCredential credential;
+	
+	public LoginView(){
+		
+		layout = new VerticalLayout();
+		
 	}
 	
-//	@PostConstruct
-//	public void PostConstruct() {
-//		setSizeFull();
-//		layout.setSpacing(true);
-//		layout.setMargin(true);
-//		addGoogleButton();
-//		layout.addComponent(ob);
-//		setContent(layout);
-//	}
-	
 	private void addGoogleButton() {
+		
         String GGL_KEY = "955701574186-f8mole07i7gdb6mevst2hdbrq857sool.apps.googleusercontent.com";
         String GGL_SECRET = "NbQmw6H9iTi7i8KmC5FudO4p";
    
@@ -71,10 +58,12 @@ public class LoginView extends Panel implements View {
         ob = new GoogleButton(GGL_KEY, GGL_SECRET, "https://www.googleapis.com/auth/calendar "
         		+ "https://www.googleapis.com/auth/userinfo.email "
         		+ "https://www.googleapis.com/auth/userinfo.profile");
+        
         ob.addOAuthListener(new OAuthListener() {
+        	
         	@Override
         	public void authSuccessful(Token token, boolean isOAuth20) {
-        		// TODO Auto-generated method stub
+        		
         		System.out.println(token.toString());
         		
         		/*
@@ -83,12 +72,25 @@ public class LoginView extends Panel implements View {
         		    Temporarily using Google+ to show that the authentication and
         		    Retrieval of information has been successful.
         		 */
+        		
         		if (token instanceof OAuth2AccessToken) {
+        			
         			String oa2 = ((OAuth2AccessToken) token).getAccessToken();
-        			GoogleCredential credential = new GoogleCredential().setAccessToken(oa2);
+        			
+        			// Get a new credential using access token.
+        			credential = new GoogleCredential().setAccessToken(oa2);
+        			
+        			// Set the UI's credential attribute equal to the one we just created,
+        			// so that it can be accessed later by LoggedOnView.
+        			UI.getCurrent().getSession().setAttribute("credential", credential);
+        			
+        			// Navigate to LoggedOnView.
 					UI.getCurrent().getNavigator().navigateTo("loggedon");
         		    
-        		} else {
+        		} 
+        		
+        		else {
+        			
         			((OAuth1AccessToken) token).getToken();
         			((OAuth1AccessToken) token).getTokenSecret();
         		}
@@ -96,18 +98,26 @@ public class LoginView extends Panel implements View {
 
         	@Override
         	public void authDenied(String reason) {
-        		// TODO Auto-generated method stub
+        		
         		System.out.println("DENIED");
         	}
+        	
         });
+        
         layout.addComponent(ob);
-//        ob.attach();
 	}
 	
 
 	@Override
 	public void enter(ViewChangeEvent event) {
-		// TODO Auto-generated method stub
+		
+		Page.getCurrent().setTitle("Login");
+		setSizeFull();
+		layout.setSpacing(true);
+		layout.setMargin(true);
+		addGoogleButton();
+		layout.addComponent(ob);
+		setContent(layout);
 		
 	}
 	

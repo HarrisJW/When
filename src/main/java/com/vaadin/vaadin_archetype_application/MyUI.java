@@ -22,19 +22,27 @@ import com.vaadin.ui.VerticalLayout;
  */
 @Push
 @Theme("mytheme")
+
 public class MyUI extends UI {
-	private GoogleCredential credential;
-	// init() is the new main()
-	// Use this pattern for all UI for CSCI 3130.
-	// Create layout --> create components --> put them together.
+	
+	//Changed visibility to protected.
+	protected GoogleCredential credential;
+
+	// Tracks all views available to the user interface.
 	Navigator navigator;
-	protected static final String MAINVIEW = "main";
+	
 	protected static final String LOGGEDON = "loggedon";
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
+    	
     	getPage().setTitle("Navigation Example");
+    	
+    	//Create a new Navigator instance, attached to this user interface.
     	navigator = new Navigator(this, this);
+    	
+    	// Create a new instance of each of our view classes,
+    	// and register them with the navigator.
     	navigator.addView("", new LoginView());
     	navigator.addView(LOGGEDON, new LoggedOnView());   
     	
