@@ -74,7 +74,6 @@ public class LoggedOnView extends Panel implements View{
 		// about credentials had been collected).
 		
 		Page.getCurrent().setTitle("LOGGEDON"); 
-		Page.getCurrent().setTitle("Login");
 		
 		setSizeFull();
 	

@@ -1,8 +1,5 @@
 package com.vaadin.vaadin_archetype_application;
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
-
 import org.vaadin.addon.oauthpopup.OAuthListener;
 import org.vaadin.addon.oauthpopup.OAuthPopupButton;
 import org.vaadin.addon.oauthpopup.buttons.GoogleButton;
@@ -14,14 +11,9 @@ import com.github.scribejava.core.model.Token;
 //import com.github.scribejava.core.model.OAuth2AccessToken;
 //import com.github.scribejava.core.model.Token;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.services.plus.Plus;
-import com.google.api.services.plus.model.Person;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Page;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
