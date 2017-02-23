@@ -1,0 +1,7 @@
+LM: US1:
+Tues Feb 21.
+Tested Google OAuth2.0 login and successfully logged in using Google credentials.
+
+LM: US1:
+Tues Feb 21.
+Tested Google OAuth2.0 login and successfully logged in using Google credentials.
