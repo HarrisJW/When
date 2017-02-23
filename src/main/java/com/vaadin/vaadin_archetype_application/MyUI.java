@@ -7,6 +7,7 @@ import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.navigator.Navigator;
+import com.vaadin.navigator.View;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.server.VaadinSession;
@@ -45,6 +46,7 @@ public class MyUI extends UI {
     	// and register them with the navigator.
     	navigator.addView("", new LoginView());
     	navigator.addView(LOGGEDON, new LoggedOnView());   
+    	navigator.addView("MeetingView", (View) new MeetingView());   
     	
     }
 

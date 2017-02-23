@@ -28,6 +28,7 @@ public class LoggedOnView extends Panel implements View{
 	public LoggedOnView(){
 		layout = new VerticalLayout();
 		addLogoutButton();
+		addMeetingButton();
 	}
 	
 	public void addLogoutButton(){
@@ -36,13 +37,29 @@ public class LoggedOnView extends Panel implements View{
 
 					@Override
 					public void buttonClick(ClickEvent event) {
+						credential = (GoogleCredential) UI.getCurrent().getSession().getAttribute("credential");
+						getUI().getSession().close();
 						UI.getCurrent().getNavigator().navigateTo("");
-						credential = (GoogleCredential) UI.getCurrent().getSession().getAttribute("");
+						
 					}
 		});
 		
 		layout.addComponent(logoutButton);
 		layout.setComponentAlignment(logoutButton, Alignment.MIDDLE_CENTER);
+	}
+	public void addMeetingButton(){
+		Button meetingButton = new Button("Meeting",
+                new Button.ClickListener() {
+
+					@Override
+					public void buttonClick(ClickEvent event) {
+						UI.getCurrent().getNavigator().navigateTo("MeetingView");
+						
+					}
+		});
+		
+		layout.addComponent(meetingButton);
+		layout.setComponentAlignment(meetingButton, Alignment.MIDDLE_CENTER);
 	}
 	
 
@@ -109,7 +126,6 @@ public class LoggedOnView extends Panel implements View{
 		layout.setSpacing(true);
 		layout.setMargin(true);
 		setContent(layout);
-		
 	}
 
 }
