@@ -1,0 +1,11 @@
+LM: US1:
+Tues Feb 21.
+Tested Google OAuth2.0 login and successfully logged in using Google credentials.
+
+LM: US1:
+Tues Feb 21.
+Tested Google OAuth2.0 login and successfully logged in using Google credentials.
+
+LM: US1:
+Thurs Feb 23.
+Tested Google OAuth2.0 login and successfully logged in using Google credentials after merging the paramater passing branch into the google signin branch.
