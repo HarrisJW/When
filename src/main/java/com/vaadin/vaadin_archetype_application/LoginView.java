@@ -26,13 +26,16 @@ public class LoginView extends Panel implements View {
 
 	protected GoogleCredential credential;
 	
+	
 	public LoginView(){
 		
 		layout = new VerticalLayout();
+		addGoogleButton();
 		
 	}
 	
 	private void addGoogleButton() {
+		
 		
         String GGL_KEY = "955701574186-f8mole07i7gdb6mevst2hdbrq857sool.apps.googleusercontent.com";
         String GGL_SECRET = "NbQmw6H9iTi7i8KmC5FudO4p";
@@ -97,6 +100,7 @@ public class LoginView extends Panel implements View {
         });
         
         layout.addComponent(ob);
+        
 	}
 	
 
@@ -107,8 +111,7 @@ public class LoginView extends Panel implements View {
 		setSizeFull();
 		layout.setSpacing(true);
 		layout.setMargin(true);
-		addGoogleButton();
-		layout.addComponent(ob);
+
 		setContent(layout);
 		
 	}
