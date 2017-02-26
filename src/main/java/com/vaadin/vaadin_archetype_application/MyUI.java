@@ -30,8 +30,6 @@ public class MyUI extends UI {
 
 	// Tracks all views available to the user interface.
 	Navigator navigator;
-	
-	protected static final String LOGGEDON = "loggedon";
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
@@ -44,8 +42,9 @@ public class MyUI extends UI {
     	// Create a new instance of each of our view classes,
     	// and register them with the navigator.
     	navigator.addView("", new LoginView());
-    	navigator.addView(LOGGEDON, new LoggedOnView());   
-    	
+    	navigator.addView(Constants.URL_LOGGED_ON, new LoggedOnView());
+    	navigator.addView(Constants.URL_JOIN_MEETING, new JoinMeetingView());
+    	navigator.addView(Constants.URL_MEETING_OVERVIEW, new MeetingOverviewView());
     }
 
     @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)

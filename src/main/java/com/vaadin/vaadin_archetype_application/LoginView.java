@@ -77,7 +77,7 @@ public class LoginView extends Panel implements View {
         			UI.getCurrent().getSession().setAttribute("credential", credential);
         			
         			// Navigate to LoggedOnView.
-					UI.getCurrent().getNavigator().navigateTo("loggedon");
+					UI.getCurrent().getNavigator().navigateTo(Constants.URL_LOGGED_ON);
         		    
         		} 
         		

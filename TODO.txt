@@ -1,0 +1,3 @@
+Restrict access to pages if user is not logged in
+Landing page for failed Google auth???
+User-friendly 404 and 500 pages
