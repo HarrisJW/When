@@ -7,6 +7,7 @@ import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.navigator.Navigator;
+import com.vaadin.navigator.View;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.server.VaadinSession;
@@ -44,7 +45,8 @@ public class MyUI extends UI {
     	navigator.addView("", new LoginView());
     	navigator.addView(Constants.URL_LOGGED_ON, new LoggedOnView());
     	navigator.addView(Constants.URL_JOIN_MEETING, new JoinMeetingView());
-    	navigator.addView(Constants.URL_MEETING_OVERVIEW, new MeetingOverviewView());
+    	navigator.addView(Constants.URL_MEETING_OVERVIEW, new MeetingOverviewView());   
+    	navigator.addView("MeetingView", (View) new MeetingView());
     }
 
     @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)

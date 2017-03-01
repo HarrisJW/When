@@ -12,17 +12,57 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Page;
 import com.vaadin.ui.VerticalLayout;
-
+import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI;
 
 public class LoggedOnView extends Panel implements View{
 	
-	final VerticalLayout layout = new VerticalLayout();
+	final VerticalLayout layout;
 	
 	protected GoogleCredential credential;
 	
+	public LoggedOnView(){
+		layout = new VerticalLayout();
+		addLogoutButton();
+		addMeetingButton();
+	}
+	
+	public void addLogoutButton(){
+		Button logoutButton = new Button("Logout",
+                new Button.ClickListener() {
+
+					@Override
+					public void buttonClick(ClickEvent event) {
+						credential = (GoogleCredential) UI.getCurrent().getSession().getAttribute("credential");
+						getUI().getSession().close();
+						UI.getCurrent().getNavigator().navigateTo("");
+						
+					}
+		});
+		
+		layout.addComponent(logoutButton);
+		layout.setComponentAlignment(logoutButton, Alignment.MIDDLE_CENTER);
+	}
+	public void addMeetingButton(){
+		Button meetingButton = new Button("Meeting",
+                new Button.ClickListener() {
+
+					@Override
+					public void buttonClick(ClickEvent event) {
+						UI.getCurrent().getNavigator().navigateTo("MeetingView");
+						
+					}
+		});
+		
+		layout.addComponent(meetingButton);
+		layout.setComponentAlignment(meetingButton, Alignment.MIDDLE_CENTER);
+	}
+	
+
 	public void addLabel() {
 		
 		Plus plus = null;
@@ -64,6 +104,8 @@ public class LoggedOnView extends Panel implements View{
 			
 		}
 	}
+	
+
 
 	@Override
 	public void enter(ViewChangeEvent event) {
@@ -84,7 +126,6 @@ public class LoggedOnView extends Panel implements View{
 		layout.setSpacing(true);
 		layout.setMargin(true);
 		setContent(layout);
-		
 	}
 
 }
