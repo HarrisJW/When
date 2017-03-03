@@ -1,5 +1,7 @@
 package com.vaadin.vaadin_archetype_application;
 
+import java.util.TimerTask;
+
 import org.vaadin.addon.oauthpopup.OAuthListener;
 import org.vaadin.addon.oauthpopup.OAuthPopupButton;
 import org.vaadin.addon.oauthpopup.buttons.GoogleButton;
@@ -11,9 +13,14 @@ import com.github.scribejava.core.model.Token;
 //import com.github.scribejava.core.model.OAuth2AccessToken;
 //import com.github.scribejava.core.model.Token;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.vaadin.event.FieldEvents.FocusEvent;
+import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.server.ErrorEvent;
+import com.vaadin.server.ErrorHandler;
 import com.vaadin.server.Page;
+import com.vaadin.server.ClientConnector.DetachEvent;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
@@ -54,8 +61,6 @@ public class LoginView extends Panel implements View {
         		+ "https://www.googleapis.com/auth/userinfo.email "
         		+ "https://www.googleapis.com/auth/userinfo.profile");
         
-        ob.setPopupWindowFeatures("resizable,width=400,height=400");
-        
         ob.addOAuthListener(new OAuthListener() {
         	
         	@Override
@@ -82,8 +87,8 @@ public class LoginView extends Panel implements View {
         			UI.getCurrent().getSession().setAttribute("credential", credential);
         			
         			// Navigate to LoggedOnView.
-					UI.getCurrent().getNavigator().navigateTo(Constants.URL_LOGGED_ON);
-        		    
+					//UI.getCurrent().getNavigator().navigateTo(Constants.URL_LOGGED_ON);
+        		    //Actual navigation is handled in FocusListener as navigating here causes an error popup
         		} 
         		
         		else {
@@ -100,6 +105,15 @@ public class LoginView extends Panel implements View {
         	}
         	
         });
+        
+        ob.addFocusListener(new FocusListener() {
+			
+			@Override
+			public void focus(FocusEvent event) {
+				if (UI.getCurrent().getSession().getAttribute("credential") != null)
+					UI.getCurrent().getNavigator().navigateTo(Constants.URL_LOGGED_ON);
+			}
+		});
         
         layout.addComponent(ob);
         
