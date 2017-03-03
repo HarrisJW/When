@@ -54,6 +54,8 @@ public class LoginView extends Panel implements View {
         		+ "https://www.googleapis.com/auth/userinfo.email "
         		+ "https://www.googleapis.com/auth/userinfo.profile");
         
+        ob.setPopupWindowFeatures("resizable,width=400,height=400");
+        
         ob.addOAuthListener(new OAuthListener() {
         	
         	@Override
