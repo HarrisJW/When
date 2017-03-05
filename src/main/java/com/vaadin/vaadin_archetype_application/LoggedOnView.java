@@ -109,6 +109,8 @@ public class LoggedOnView extends Panel implements View{
 
 	@Override
 	public void enter(ViewChangeEvent event) {
+		if (!UserManager.IsLoggedIn(Constants.URL_LOGGED_ON))
+			return;
 		
 		// Moved this logic from the constructor, to ensure that it is called when we transition views.
 		// Including this logic in the constructor meant that it was called during instantiation

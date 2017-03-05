@@ -20,7 +20,9 @@ public class MeetingOverviewView extends Panel implements View {
 	@Override
 	public void enter(ViewChangeEvent event)
 	{
-		Page.getCurrent().setTitle("Join meeting");
+		if (!UserManager.IsLoggedIn(Constants.URL_MEETING_OVERVIEW))
+			return;
+		Page.getCurrent().setTitle("Meeting overview");
 		setSizeFull();
 		initUI();
 	}

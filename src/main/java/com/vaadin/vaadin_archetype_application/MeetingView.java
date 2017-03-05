@@ -8,8 +8,8 @@ public class MeetingView extends Panel implements View {
 
 	@Override
 	public void enter(ViewChangeEvent event) {
-		// TODO Auto-generated method stub
-		
+		if (!UserManager.IsLoggedIn(Constants.URL_MEETING_OVERVIEW))
+			return;
 	}
 
 }

@@ -20,29 +20,26 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.ErrorEvent;
 import com.vaadin.server.ErrorHandler;
 import com.vaadin.server.Page;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.server.ClientConnector.DetachEvent;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
 public class LoginView extends Panel implements View {
-	
+
+	protected VerticalLayout layout;
 	protected OAuthPopupButton ob;
-	
-	final VerticalLayout layout;
+	protected Label lLoginRequired;
 
 	protected GoogleCredential credential;
 	
 	
-	public LoginView(){
-		
+	private void initUI() {
 		layout = new VerticalLayout();
-		addGoogleButton();
-		
-	}
-	
-	private void addGoogleButton() {
-		
+		layout.setSpacing(true);
+		layout.setMargin(true);
 		
         String GGL_KEY = "955701574186-f8mole07i7gdb6mevst2hdbrq857sool.apps.googleusercontent.com";
         String GGL_SECRET = "NbQmw6H9iTi7i8KmC5FudO4p";
@@ -110,25 +107,53 @@ public class LoginView extends Panel implements View {
 			
 			@Override
 			public void focus(FocusEvent event) {
-				if (UI.getCurrent().getSession().getAttribute("credential") != null)
-					UI.getCurrent().getNavigator().navigateTo(Constants.URL_LOGGED_ON);
+				//Navigate to next page if user is logged in
+				if (IsLoggedIn())
+					OnUserLoggedIn();
 			}
 		});
         
         layout.addComponent(ob);
-        
+
+        lLoginRequired = new Label("", ContentMode.HTML);
+        layout.addComponent(lLoginRequired);
+		if (UI.getCurrent().getSession().getAttribute("loginRedirectTarget") != null)
+		{
+			lLoginRequired.setValue("<font color=\"red\"/>You need to be logged in to access this page");
+			ob.click();
+		}
+
+		setContent(layout);
+	}
+	
+	//Used to navigate either to default page or to initial destination post-login
+	private void OnUserLoggedIn()
+	{
+		if (UI.getCurrent().getSession().getAttribute("loginRedirectTarget") == null)
+			UI.getCurrent().getNavigator().navigateTo(Constants.URL_LOGGED_ON);
+		else
+		{
+			UI.getCurrent().getNavigator().navigateTo((String)UI.getCurrent().getSession().getAttribute("loginRedirectTarget"));
+			UI.getCurrent().getSession().setAttribute("loginRedirectTarget", null);
+		}
+	}
+	
+	private boolean IsLoggedIn()
+	{
+		return UI.getCurrent().getSession().getAttribute("credential") != null;
 	}
 	
 
 	@Override
 	public void enter(ViewChangeEvent event) {
-		
+		if (IsLoggedIn())
+		{
+			OnUserLoggedIn();
+			return;
+		}
 		Page.getCurrent().setTitle("Login");
 		setSizeFull();
-		layout.setSpacing(true);
-		layout.setMargin(true);
-
-		setContent(layout);
+		initUI();
 		
 	}
 	
