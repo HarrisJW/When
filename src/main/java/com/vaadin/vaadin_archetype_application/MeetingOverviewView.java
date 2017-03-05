@@ -15,19 +15,10 @@ import com.vaadin.ui.Button.ClickListener;
 
 //Meeting overview page
 //TODO
-public class MeetingOverviewView extends Panel implements View {
+public class MeetingOverviewView extends ILoggedInView {
 
 	@Override
-	public void enter(ViewChangeEvent event)
-	{
-		if (!UserManager.AssureLogin(Constants.URL_MEETING_OVERVIEW))
-			return;
-		Page.getCurrent().setTitle("Meeting overview");
-		setSizeFull();
-		initUI();
-	}
-
-	private void initUI()
+	protected void InitUI()
 	{
 		VerticalLayout layout = new VerticalLayout();
 		layout.setSpacing(true);
@@ -36,5 +27,15 @@ public class MeetingOverviewView extends Panel implements View {
 		layout.addComponent(new Label("//TODO"));
 		
 		setContent(layout);
+	}
+
+	@Override
+	public String GetPageTitle() {
+		return "Meeting overview";
+	}
+
+	@Override
+	public String GetPageURL() {
+		return Constants.URL_MEETING_OVERVIEW;
 	}
 }
