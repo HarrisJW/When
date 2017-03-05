@@ -6,6 +6,8 @@ import org.junit.Test;
 public final class DatabaseConnector{
 	private DatabaseConnector() { } //Thank you, Java, for not allowing static classes /s
 
+	//Function that checks if meeting ID and password correspond to any existing ones and 
+	//joins users to that meeting
 	public static int TryJoinMeeting(String meetingID, String meetingPassword)
 	{
 		if (meetingID.length() == 0)

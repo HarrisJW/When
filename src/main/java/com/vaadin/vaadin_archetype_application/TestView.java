@@ -15,17 +15,19 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 
+//This will not be in final release
+//This view is used to quickly navigate to different parts of app during development
 public class TestView extends Panel implements View {
 
 	@Override
 	public void enter(ViewChangeEvent event) {
-		Page.getCurrent().setTitle("Join meeting");
+		Page.getCurrent().setTitle("Debug view");
 		setSizeFull();
-		initUI();
+		InitUI();
 	}
 
 	//Create all UI elements and set button click handler
-	private void initUI()
+	private void InitUI()
 	{
 		
 		VerticalLayout layout = new VerticalLayout();//Global layout

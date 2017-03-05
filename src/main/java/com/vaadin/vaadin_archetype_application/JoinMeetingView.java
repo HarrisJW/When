@@ -1,40 +1,37 @@
 package com.vaadin.vaadin_archetype_application;
 
-import com.vaadin.navigator.View;
-import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.server.Page;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Panel;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 
 //Join meeting page
-public class JoinMeetingView extends Panel implements View {
+public class JoinMeetingView extends ILoggedInView {
 	private TextField tbMeetingID;
 	private PasswordField tbMeetingPassword;
 	private Label lErrorMessage;
+
+	
 	
 	@Override
-	public void enter(ViewChangeEvent event)
-	{
-		if (!UserManager.IsLoggedIn(Constants.URL_JOIN_MEETING))
-			return;
-		Page.getCurrent().setTitle("Join meeting");
-		setSizeFull();
-		initUI();
+	public String GetPageTitle() {
+		return "Join meeting";
+	}
+	
+	@Override
+	public String GetPageURL() {
+		return Constants.URL_JOIN_MEETING;
 	}
 	
 	
 	
 	//Create all UI elements and set button click handler
-	private void initUI()
+	@Override
+	protected void InitUI()
 	{
 		tbMeetingID = new TextField();
 		tbMeetingPassword = new PasswordField();
@@ -53,38 +50,39 @@ public class JoinMeetingView extends Panel implements View {
 		gl.addComponent(tbMeetingPassword, 1, 1);
 		layout.addComponent(gl);
 		
+		//Join meeting button
 		Button bJoin = new Button("Join meeting");
-		bJoin.addClickListener(new ClickListener() {
-			
-			//Join meeting button click handler. Communicates with DB and changes state according to the return code
-			@Override
-			public void buttonClick(ClickEvent event) {
-				int code = DatabaseConnector.TryJoinMeeting(tbMeetingID.getValue(), tbMeetingPassword.getValue());
-				System.out.println("TryJoinMeeting returned code " + String.valueOf(code));
-				switch (code) {
-				case 0:
-					UI.getCurrent().getNavigator().navigateTo(Constants.URL_MEETING_OVERVIEW);					
-					break;
-
-				case Constants.CODE_INVALID_MEETING_ID_PASSWORD:
-					setErrorMessage("Invalid ID / Password combination");
-					break;
-
-				case Constants.CODE_MEETING_ID_EMPTY:
-					setErrorMessage("Meeting ID can't be empty");
-					break;
-					
-				default:
-					setErrorMessage("Unknown behavior");
-					break;
-				}
-			}
-		});
+		bJoin.addClickListener(e -> OnJoinMeetingButtonClicked());
 		layout.addComponent(bJoin);
 		
+		//Error message label
 		layout.addComponent(lErrorMessage);
 		
 		setContent(layout);
+	}
+
+	//Join meeting button click handler. Communicates with DB and changes state according to the return code
+	private void OnJoinMeetingButtonClicked()
+	{
+		int code = DatabaseConnector.TryJoinMeeting(tbMeetingID.getValue(), tbMeetingPassword.getValue());
+		System.out.println("TryJoinMeeting returned code " + String.valueOf(code));
+		switch (code) {
+		case 0:
+			UI.getCurrent().getNavigator().navigateTo(Constants.URL_MEETING_OVERVIEW);					
+			break;
+
+		case Constants.CODE_INVALID_MEETING_ID_PASSWORD:
+			setErrorMessage("Invalid ID / Password combination");
+			break;
+
+		case Constants.CODE_MEETING_ID_EMPTY:
+			setErrorMessage("Meeting ID can't be empty");
+			break;
+			
+		default:
+			setErrorMessage("Unknown behavior");
+			break;
+		}
 	}
 	
 	//Display error message in red

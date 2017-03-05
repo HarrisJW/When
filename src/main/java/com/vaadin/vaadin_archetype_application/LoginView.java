@@ -1,7 +1,5 @@
 package com.vaadin.vaadin_archetype_application;
 
-import java.util.TimerTask;
-
 import org.vaadin.addon.oauthpopup.OAuthListener;
 import org.vaadin.addon.oauthpopup.OAuthPopupButton;
 import org.vaadin.addon.oauthpopup.buttons.GoogleButton;
@@ -13,15 +11,10 @@ import com.github.scribejava.core.model.Token;
 //import com.github.scribejava.core.model.OAuth2AccessToken;
 //import com.github.scribejava.core.model.Token;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-import com.vaadin.event.FieldEvents.FocusEvent;
-import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.server.ErrorEvent;
-import com.vaadin.server.ErrorHandler;
 import com.vaadin.server.Page;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.server.ClientConnector.DetachEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI;
@@ -34,9 +27,21 @@ public class LoginView extends Panel implements View {
 	protected Label lLoginRequired;
 
 	protected GoogleCredential credential;
+
+
+	@Override
+	public void enter(ViewChangeEvent event) {
+		if (UserManager.IsLoggedIn())
+		{
+			OnUserLoggedIn();
+			return;
+		}
+		Page.getCurrent().setTitle("Login");
+		setSizeFull();
+		InitUI();
+	}
 	
-	
-	private void initUI() {
+	protected void InitUI() {
 		layout = new VerticalLayout();
 		layout.setSpacing(true);
 		layout.setMargin(true);
@@ -103,18 +108,15 @@ public class LoginView extends Panel implements View {
         	
         });
         
-        ob.addFocusListener(new FocusListener() {
-			
-			@Override
-			public void focus(FocusEvent event) {
+        ob.addFocusListener(e -> {
 				//Navigate to next page if user is logged in
-				if (IsLoggedIn())
+				if (UserManager.IsLoggedIn())
 					OnUserLoggedIn();
-			}
-		});
+			});
         
         layout.addComponent(ob);
 
+        //Show "login required" label when user is redirected from another page
         lLoginRequired = new Label("", ContentMode.HTML);
         layout.addComponent(lLoginRequired);
 		if (UI.getCurrent().getSession().getAttribute("loginRedirectTarget") != null)
@@ -137,25 +139,5 @@ public class LoginView extends Panel implements View {
 			UI.getCurrent().getSession().setAttribute("loginRedirectTarget", null);
 		}
 	}
-	
-	private boolean IsLoggedIn()
-	{
-		return UI.getCurrent().getSession().getAttribute("credential") != null;
-	}
-	
-
-	@Override
-	public void enter(ViewChangeEvent event) {
-		if (IsLoggedIn())
-		{
-			OnUserLoggedIn();
-			return;
-		}
-		Page.getCurrent().setTitle("Login");
-		setSizeFull();
-		initUI();
-		
-	}
-	
 }
 

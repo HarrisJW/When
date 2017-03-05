@@ -19,16 +19,38 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI;
 
-public class LoggedOnView extends Panel implements View{
+public class LoggedOnView extends ILoggedInView {
 	
-	final VerticalLayout layout;
-	
+	protected VerticalLayout layout;
 	protected GoogleCredential credential;
 	
-	public LoggedOnView(){
+
+
+	@Override
+	public String GetPageTitle() {
+		return "Logged on";
+	}
+
+	@Override
+	public String GetPageURL() {
+		return Constants.URL_LOGGED_ON;
+	}
+	
+	@Override
+	protected void InitUI()
+	{
+		// Get a local reference to the UI's credential, which was set after successful login.
+		credential = (GoogleCredential) UI.getCurrent().getSession().getAttribute("credential");
+		
 		layout = new VerticalLayout();
+		layout.setSpacing(true);
+		layout.setMargin(true);
+		
 		addLogoutButton();
 		addMeetingButton();
+		addLabel();
+		
+		setContent(layout);
 	}
 	
 	public void addLogoutButton(){
@@ -39,7 +61,8 @@ public class LoggedOnView extends Panel implements View{
 					public void buttonClick(ClickEvent event) {
 						credential = (GoogleCredential) UI.getCurrent().getSession().getAttribute("credential");
 						getUI().getSession().close();
-						UI.getCurrent().getNavigator().navigateTo("");
+						getUI().getPage().setLocation("");//Use this instead of the line below to avoid "Session expired" message
+						//UI.getCurrent().getNavigator().navigateTo("");
 						
 					}
 		});
@@ -53,7 +76,7 @@ public class LoggedOnView extends Panel implements View{
 
 					@Override
 					public void buttonClick(ClickEvent event) {
-						UI.getCurrent().getNavigator().navigateTo("MeetingView");
+						UI.getCurrent().getNavigator().navigateTo(Constants.URL_MEETING_OVERVIEW);
 						
 					}
 		});
@@ -103,31 +126,6 @@ public class LoggedOnView extends Panel implements View{
 			}
 			
 		}
-	}
-	
-
-
-	@Override
-	public void enter(ViewChangeEvent event) {
-		if (!UserManager.IsLoggedIn(Constants.URL_LOGGED_ON))
-			return;
-		
-		// Moved this logic from the constructor, to ensure that it is called when we transition views.
-		// Including this logic in the constructor meant that it was called during instantiation
-		// of the object when registering it with the navigator (i.e. before most of the information
-		// about credentials had been collected).
-		
-		Page.getCurrent().setTitle("LOGGEDON"); 
-		
-		setSizeFull();
-	
-		// Get a local reference to the UI's credential, which was set after successful login.
-		credential = (GoogleCredential) UI.getCurrent().getSession().getAttribute("credential");
-		
-		addLabel();
-		layout.setSpacing(true);
-		layout.setMargin(true);
-		setContent(layout);
 	}
 
 }

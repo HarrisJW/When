@@ -25,17 +25,12 @@ import com.vaadin.ui.VerticalLayout;
 @Theme("mytheme")
 
 public class MyUI extends UI {
-	
-	//Changed visibility to protected.
-	protected GoogleCredential credential;
 
 	// Tracks all views available to the user interface.
 	Navigator navigator;
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
-    	
-    	getPage().setTitle("Navigation Example");
     	
     	//Create a new Navigator instance, attached to this user interface.
     	navigator = new Navigator(this, this);
@@ -47,7 +42,6 @@ public class MyUI extends UI {
     	navigator.addView(Constants.URL_LOGGED_ON, new LoggedOnView());
     	navigator.addView(Constants.URL_JOIN_MEETING, new JoinMeetingView());
     	navigator.addView(Constants.URL_MEETING_OVERVIEW, new MeetingOverviewView());
-    	navigator.addView("MeetingView", (View) new MeetingView());
     }
 
     @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)

@@ -5,16 +5,24 @@ import com.vaadin.ui.UI;
 public final class UserManager {
 	private UserManager() { } //Thank you, Java, for not having static classes
 	
-	public static boolean IsLoggedIn(String targetView)
+	//Returns true if user is logged in.
+	//Returns false and redirects user to login page if user's not logged in
+	public static boolean AssureLogin(String targetView)
 	{
-		if (UI.getCurrent().getSession().getAttribute("credential") == null)
+		if (IsLoggedIn())
+			return true;
+		else
 		{
 			System.out.println("User not logged in");
 			UI.getCurrent().getSession().setAttribute("loginRedirectTarget", targetView);
 			UI.getCurrent().getNavigator().navigateTo(Constants.URL_LOGIN);
 			return false;
 		}
-		else
-			return true;
+	}
+	
+	//Checks if user is logged in
+	public static boolean IsLoggedIn()
+	{
+		return UI.getCurrent().getSession().getAttribute("credential") != null;
 	}
 }
