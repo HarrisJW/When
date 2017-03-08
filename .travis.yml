@@ -1,5 +1,12 @@
 language: java
 install:
- - mvn install
+- mvn install
 jdk:
- - oraclejdk8
+- oraclejdk8
+deploy:
+  provider: heroku
+  api_key:
+    secure: '5fa32cd2-9037-44c4-b3cf-ffd982fb70ab'
+  app: when-app
+  on:
+    repo: HarrisJW/When
