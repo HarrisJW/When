@@ -2,6 +2,7 @@ package com.vaadin.vaadin_archetype_application;
 
 //Class to store all of the constants
 public final class Constants {
+	
 	private Constants() { } //Thank you, Java, for not allowing static classes /s
 
 	//URL constants
