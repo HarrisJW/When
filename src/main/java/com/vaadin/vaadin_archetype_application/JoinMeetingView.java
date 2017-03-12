@@ -15,8 +15,6 @@ public class JoinMeetingView extends ILoggedInView {
 	private PasswordField tbMeetingPassword;
 	private Label lErrorMessage;
 
-	
-	
 	@Override
 	public String GetPageTitle() {
 		return "Join meeting";
