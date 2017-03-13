@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.phantomjs.PhantomJSDriver;
 
 import com.gargoylesoftware.htmlunit.javascript.host.file.File;
 import com.vaadin.testbench.ScreenshotOnFailureRule;
@@ -14,7 +15,6 @@ import com.vaadin.testbench.TestBench;
 import com.vaadin.testbench.TestBenchTestCase;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.LabelElement;
-
 
 public class CreateMeetingViewTest extends TestBenchTestCase {
 	
@@ -24,17 +24,18 @@ public class CreateMeetingViewTest extends TestBenchTestCase {
 	// @Rule
 	// public ScreenshotOnFailureRule screenshotOnFailureRule = new ScreenshotOnFailureRule(this, true);
 	// Encountered classnotfound exception, and fixed it by adding to pom.xml
-	//http://stackoverflow.com/questions/24741012/noclassdeffounderror-while-running-a-valid-jar-compiled-with-dependencies-desp
+	// http://stackoverflow.com/questions/24741012/noclassdeffounderror-while-running-a-valid-jar-compiled-with-dependencies-desp
+	
 	@Before
 	public void setUp() throws Exception {
 
-			setDriver(new FirefoxDriver());
+			setDriver(new PhantomJSDriver());
 			
 	}
 
 	private void openTestUrl(){
 		
-		getDriver().get("http://localhost8080");
+		getDriver().get("http://localhost:8080");
 
 	}
 

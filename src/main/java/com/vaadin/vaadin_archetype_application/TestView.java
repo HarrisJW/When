@@ -35,6 +35,7 @@ public class TestView extends Panel implements View {
 		layout.setMargin(true);
 		
 		Button bLogin = new Button("Login");
+		bLogin.setId("Login");
 		bLogin.addClickListener(new ClickListener() {
 			
 			//Join meeting button click handler. Communicates with DB and changes state according to the return code
@@ -46,6 +47,7 @@ public class TestView extends Panel implements View {
 		layout.addComponent(bLogin);
 
 		Button bJoinMeeting = new Button("Join meeting");
+		bJoinMeeting.setId("JoinMeeting");
 		bJoinMeeting.addClickListener(new ClickListener() {
 			
 			//Join meeting button click handler. Communicates with DB and changes state according to the return code
