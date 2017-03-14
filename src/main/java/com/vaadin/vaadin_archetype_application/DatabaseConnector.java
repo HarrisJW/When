@@ -20,4 +20,12 @@ public final class DatabaseConnector{
 		
 		return Constants.CODE_INVALID_MEETING_ID_PASSWORD;
 	}
+	
+	public static int tryCreateMeeting(String meetingName, 
+			String meetingPassword, 
+			String confirmMeetingPassword, 
+			String participantEmailAddresses){
+		
+		return 0;
+	}
 }

@@ -55,7 +55,9 @@ public class CreateMeetingViewTest extends TestBenchTestCase {
 	
 	@After
 	public void tearDown() throws Exception {
+		
 		getDriver().quit();
+		
 	}
 
 }
