@@ -63,7 +63,7 @@ public class CreateMeetingView extends ILoggedInView {
 		
 		// Join meeting button
 		Button bCreate = new Button("Create meeting");
-		bCreate.addClickListener(e -> OnJoinMeetingButtonClicked());
+		bCreate.addClickListener(e -> OnCreateMeetingButtonClicked());
 		layout.addComponent(bCreate);
 		
 		// Error message label
@@ -73,7 +73,7 @@ public class CreateMeetingView extends ILoggedInView {
 	}
 
 	//Join meeting button click handler. Communicates with DB and changes state according to the return code
-	private void OnJoinMeetingButtonClicked()
+	private void OnCreateMeetingButtonClicked()
 	
 	{
 		int code = DatabaseConnector.tryCreateMeeting(tbMeetingName.getValue(), 
