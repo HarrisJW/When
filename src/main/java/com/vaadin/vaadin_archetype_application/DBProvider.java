@@ -36,6 +36,7 @@ public interface DBProvider {
 	public class MeetingDescription
 	{
 		public int ID;
+		public String code;
 		public String name;
 		public Date startDate, endDate, duration;
 		public MeetingState state;
@@ -56,14 +57,15 @@ public interface DBProvider {
 		public UserAccess access;
 	}
 	
-	public int TryJoinMeeting(String meetingID, String meetingPassword);
-	public int CreateMeeting(String password, Date startDate, Date endDate, String name, Date duration);
+	public int TryJoinMeeting(String meetingCode, String meetingPassword, int userID);
+	public int CreateMeeting(String password, Date startDate, Date endDate, String name, Date duration, int userID);
 	public boolean DeleteMeeting(int meetingID);//Don't call this in prod
 	public MeetingDescription GetMeetingDescription(int meetingID);
-	public MeetingShortDescription[] GetMeetingsList();
-	public MeetingMember[] GetMeetingMembers(int meetingID);
+	public ArrayList<MeetingShortDescription> GetMeetingsList(int userID);
+	public ArrayList<MeetingMember> GetMeetingMembers(int meetingID);
 	public int GetMeetingMembersCount(int meetingID);
 	public int GetUserID(String email);
 	public boolean UpdateMeetingTime(int meetingID, Date startDate, Date endDate, Date duration);
-	public boolean CreateUser(String firstName, String lastName, String email, String googleID);
+	public int CreateUser(String firstName, String lastName, String email, String googleID);
+	public int LeaveMeeting(int meetingID, int userID);
 }

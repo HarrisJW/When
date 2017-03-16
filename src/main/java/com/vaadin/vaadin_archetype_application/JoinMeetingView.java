@@ -64,7 +64,7 @@ public class JoinMeetingView extends ILoggedInView {
 	//Join meeting button click handler. Communicates with DB and changes state according to the return code
 	private void OnJoinMeetingButtonClicked()
 	{
-		int code = Controllers.DatabaseConnector.TryJoinMeeting(tbMeetingID.getValue(), tbMeetingPassword.getValue());
+		int code = Controllers.DatabaseConnector.TryJoinMeeting(tbMeetingID.getValue(), tbMeetingPassword.getValue(), 0);//TODO user id
 		System.out.println("TryJoinMeeting returned code " + String.valueOf(code));
 		switch (code) {
 		case 0:
