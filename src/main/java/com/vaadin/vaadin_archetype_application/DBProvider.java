@@ -15,6 +15,7 @@ public interface DBProvider {
 	public void Initialize();
 	public void Dispose();
 	public boolean IsConnected();
+	public Connection GetConnection();
 	
 	
 	

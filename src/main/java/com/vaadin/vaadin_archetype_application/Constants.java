@@ -4,6 +4,9 @@ package com.vaadin.vaadin_archetype_application;
 public final class Constants {
 	private Constants() { } //Thank you, Java, for not allowing static classes /s
 
+	//DB connection string
+	public static final String dbConnectionString = "jdbc:mysql://45.55.91.114:3306/whenapp?user=dev&password=dev";
+
 	//URL constants
 	public static final String URL_LOGIN = "login";
 	public static final String URL_LOGGED_ON = "logged-on";
