@@ -1,5 +1,8 @@
 package com.vaadin.vaadin_archetype_application;
 
+import java.io.IOException;
+import java.text.ParseException;
+
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Page;
@@ -25,6 +28,14 @@ public class MeetingOverviewView extends ILoggedInView {
 		layout.setMargin(true);
 		
 		layout.addComponent(new Label("//TODO"));
+		
+		//test for busy calendar times
+		try {
+			CalendarStuff.calendarTest();
+		} catch (IOException | ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		setContent(layout);
 	}
