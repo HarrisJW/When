@@ -1,7 +1,10 @@
 package com.vaadin.vaadin_archetype_application;
 
+import java.util.Date;
+
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.PasswordField;
@@ -12,7 +15,11 @@ import com.vaadin.ui.VerticalLayout;
 public class CreateMeetingView extends ILoggedInView {
 
 	private TextField tbMeetingName;
+	private TextField tbMeetingCreatorEmailAddress;
 	private TextField tbMeetingParticipantEmailAddresses;
+	private DateField tbMeetingStartDate;
+	private DateField tbMeetingEndDate;
+	private DateField tbMeetingDuration;
 	private PasswordField tbMeetingPassword;
 	private PasswordField tbConfirmMeetingPassword;
 	private Label lErrorMessage;
@@ -33,6 +40,10 @@ public class CreateMeetingView extends ILoggedInView {
 	protected void InitUI()
 	{
 		tbMeetingName = new TextField();
+		tbMeetingStartDate = new DateField();
+		tbMeetingEndDate = new DateField();
+		tbMeetingDuration = new DateField();
+		tbMeetingCreatorEmailAddress = new TextField();
 		tbMeetingParticipantEmailAddresses = new TextField();
 		tbMeetingPassword = new PasswordField();
 		tbConfirmMeetingPassword = new PasswordField();
@@ -44,7 +55,7 @@ public class CreateMeetingView extends ILoggedInView {
 		layout.setSpacing(true);
 		layout.setMargin(true);
 		
-		GridLayout gl = new GridLayout(2,4);//Grid layout for text fields
+		GridLayout gl = new GridLayout(2,8);//Grid layout for text fields
 		gl.setSpacing(true);
 		
 		gl.addComponent(new Label("Meeting Name: "), 0, 0);
@@ -56,8 +67,20 @@ public class CreateMeetingView extends ILoggedInView {
 		gl.addComponent(new Label("Confirm meeting Password: "), 0, 2);
 		gl.addComponent(tbConfirmMeetingPassword, 1, 2);
 		
-		gl.addComponent(new Label("Meeting participant email addresses: "), 0, 3);
-		gl.addComponent(tbMeetingParticipantEmailAddresses, 1, 3);
+		gl.addComponent(new Label("Meeting creator email address: "), 0, 3);
+		gl.addComponent(tbMeetingCreatorEmailAddress, 1, 3);
+		
+		gl.addComponent(new Label("Meeting participant email addresses: "), 0, 4);
+		gl.addComponent(tbMeetingParticipantEmailAddresses, 1, 4);
+		
+		gl.addComponent(new Label("Meeting start date: "), 0, 5);
+		gl.addComponent(tbMeetingStartDate, 1, 5);
+		
+		gl.addComponent(new Label("Meeting end date: "), 0, 6);
+		gl.addComponent(tbMeetingEndDate, 1, 6);
+		
+		gl.addComponent(new Label("Meeting duration: "), 0, 7);
+		gl.addComponent(tbMeetingDuration, 1, 7);
 		
 		layout.addComponent(gl);
 		
@@ -76,10 +99,16 @@ public class CreateMeetingView extends ILoggedInView {
 	private void OnCreateMeetingButtonClicked()
 	
 	{
-		int code = DatabaseConnector.CreateMeeting(tbMeetingName.getValue(), 
-				tbMeetingPassword.getValue(),
-				tbConfirmMeetingPassword.getValue(),
-				tbMeetingParticipantEmailAddresses.getValue());
+		
+		// CreateMeeting() takes:
+		// String password, Date startDate, Date endDate, String name, Date duration, long userID
+		// Update text entry fields to reflect same.
+		
+		int code = (int) Controllers.DatabaseConnector.CreateMeeting(tbMeetingPassword.getValue(), 
+				tbMeetingStartDate.getValue(), tbMeetingEndDate.getValue(),
+				tbMeetingName.getValue(),
+				tbMeetingDuration.getValue(),
+				Controllers.DatabaseConnector.GetUserID(tbMeetingCreatorEmailAddress.getValue()));
 		
 		switch (code) {
 		

@@ -124,7 +124,6 @@
 			<version>4.4</version>
 		</dependency>
 		<dependency>
-<<<<<<< HEAD
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-testbench</artifactId>
 			<version>4.2.0</version>
@@ -134,11 +133,11 @@
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 			<version>4.3.5</version>
-=======
+		</dependency>
+		<dependency>
     		<groupId>mysql</groupId>
     		<artifactId>mysql-connector-java</artifactId>
     		<version>5.1.41</version>
->>>>>>> refs/remotes/origin/master
 		</dependency>
 	</dependencies>
 
