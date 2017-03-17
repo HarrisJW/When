@@ -45,6 +45,8 @@ public class MyUI extends UI {
     	navigator.addView(Constants.URL_CREATE_MEETING, new CreateMeetingView());
     	navigator.addView(Constants.URL_INDIVIDUAL_MEETING, new IndividualMeetingView());
     	navigator.addView(Constants.URL_ALL_MEETINGS, new AllMeetingsView());
+    	
+    	Controllers.DatabaseConnector.Initialize();
     }
 
     @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
