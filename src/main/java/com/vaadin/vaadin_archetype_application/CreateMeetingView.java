@@ -76,7 +76,7 @@ public class CreateMeetingView extends ILoggedInView {
 	private void OnCreateMeetingButtonClicked()
 	
 	{
-		int code = DatabaseConnector.tryCreateMeeting(tbMeetingName.getValue(), 
+		int code = DatabaseConnector.CreateMeeting(tbMeetingName.getValue(), 
 				tbMeetingPassword.getValue(),
 				tbConfirmMeetingPassword.getValue(),
 				tbMeetingParticipantEmailAddresses.getValue());

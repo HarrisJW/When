@@ -1,9 +1,13 @@
 package com.vaadin.vaadin_archetype_application;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Test;
 
 //Class responsible for fetching and uploading data to database
 public final class DatabaseConnector{
+	
 	private DatabaseConnector() { } //Thank you, Java, for not allowing static classes /s
 
 	//Function that checks if meeting ID and password correspond to any existing ones and 
@@ -21,11 +25,24 @@ public final class DatabaseConnector{
 		return Constants.CODE_INVALID_MEETING_ID_PASSWORD;
 	}
 	
-	public static int tryCreateMeeting(String meetingName, 
+	public static int CreateMeeting(String meetingName, 
 			String meetingPassword, 
 			String confirmMeetingPassword, 
 			String participantEmailAddresses){
 		
 		return 0;
+	}
+	
+	public static List<Meeting> getMeetings(String username){
+		
+		Meeting meetingAM = new Meeting(0, "9:00AM", "10:00AM", null, null, null);
+		Meeting meetingPM = new Meeting(0, "1:00PM", "2:00PM", null, null, null);
+		
+		ArrayList<Meeting> meetings = new ArrayList<Meeting>();
+		meetings.add(meetingAM);
+		meetings.add(meetingPM);
+		return meetings;
+		
+		
 	}
 }

@@ -86,6 +86,23 @@ public class TestView extends Panel implements View {
 		
 		layout.addComponent(bCreateMeeting);
 		
+		//*****************************************************************************
+		// View meeting button.
+		//*****************************************************************************
+		
+		Button bViewAllMeetings = new Button("View meetings");
+		bViewAllMeetings.setId("ViewMeetings");
+		bViewAllMeetings.addClickListener(new ClickListener() {
+			
+			// Join meeting button click handler. Communicates with DB and changes state according to the return code
+			@Override
+			public void buttonClick(ClickEvent event) {
+				UI.getCurrent().getNavigator().navigateTo(Constants.URL_ALL_MEETINGS);
+			}
+		});
+		
+		layout.addComponent(bViewAllMeetings);
+		
 		setContent(layout);
 	}
 
