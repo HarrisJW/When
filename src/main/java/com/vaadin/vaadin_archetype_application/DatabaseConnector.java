@@ -52,17 +52,20 @@ public class DatabaseConnector extends MySQLProvider {
 	//Function that checks if meeting ID and password correspond to any existing ones and 
 	//joins users to that meeting
 	@Override
-	public int TryJoinMeeting(String meetingID, String meetingPassword, long userID)//TODO
+	public int TryJoinMeeting(String meetingID, String meetingPassword, long userID)
 	{
+		
 		if (meetingID.length() == 0)
 			return Constants.CODE_MEETING_ID_EMPTY;
-		
 		if (meetingID.equals("nopass"))
 			return 0;
 		if (meetingID.equals("pass") && meetingPassword.equals("guest"))
 			return 0;
 		
-		return Constants.CODE_INVALID_MEETING_ID_PASSWORD;
+		ArrayList<Object[]> r = ExecuteStoredProcedure(connection, "joinMeeting", new Object[] { meetingID, meetingPassword, userID });
+		Object[] o = r.get(0);
+		
+		return (int) o[1];
 	}
 
 	
