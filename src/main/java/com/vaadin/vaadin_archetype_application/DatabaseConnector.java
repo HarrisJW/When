@@ -54,18 +54,19 @@ public class DatabaseConnector extends MySQLProvider {
 	@Override
 	public int TryJoinMeeting(String meetingID, String meetingPassword, long userID)
 	{
-		
-		if (meetingID.length() == 0)
+		if (meetingID == null || meetingID.length() == 0)
 			return Constants.CODE_MEETING_ID_EMPTY;
-		if (meetingID.equals("nopass"))
-			return 0;
-		if (meetingID.equals("pass") && meetingPassword.equals("guest"))
-			return 0;
 		
-		ArrayList<Object[]> r = ExecuteStoredProcedure(connection, "joinMeeting", new Object[] { meetingID, meetingPassword, userID });
-		Object[] o = r.get(0);
-		
-		return (int) o[1];
+		try
+		{
+			ArrayList<Object[]> r = ExecuteStoredProcedure(connection, "joinMeeting", new Object[] { userID, meetingID, meetingPassword });
+			Object[] o = r.get(0);
+			return (int)(long)o[0];
+		}
+		catch (Exception e) 
+		{
+			return Constants.CODE_INVALID_MEETING_ID_PASSWORD;
+		}
 	}
 
 	
@@ -81,7 +82,7 @@ public class DatabaseConnector extends MySQLProvider {
 	@Override
 	public boolean DeleteMeeting(long meetingID) {
 		ArrayList<Object[]> r = ExecuteStoredProcedure(connection, "deleteMeeting", new Object[] { meetingID });
-		return false;
+		return true;
 	}
 
 	@Override
@@ -103,6 +104,7 @@ public class DatabaseConnector extends MySQLProvider {
 			meetingDescription.state = MeetingState.Voting;
 		else
 			meetingDescription.state = MeetingState.Finalized;
+		meetingDescription.code = (String)o[5];
 		
 		return meetingDescription;
 	}
@@ -116,10 +118,10 @@ public class DatabaseConnector extends MySQLProvider {
 		{
 			MeetingShortDescription msd = new MeetingShortDescription();
 			o = r.get(i);
-			msd.ID = ((BigInteger)o[0]).longValue();
+			msd.ID = (int)o[0];
 			msd.name = (String)o[1];
-			msd.state = (byte)o[2];
-			msd.numberOfMembers = (int)o[3];
+			msd.state = (byte)(int)o[2];
+			msd.numberOfMembers = (int)(long)o[3];
 			meetingDescriptions.add(msd);
 		}
 		return meetingDescriptions;
@@ -134,7 +136,7 @@ public class DatabaseConnector extends MySQLProvider {
 		{
 			MeetingMember mm = new MeetingMember();
 			o = r.get(i);
-			mm.ID = ((BigInteger)o[0]).longValue();
+			mm.ID = (int)o[0];
 			mm.firstName = (String)o[1];
 			mm.lastName = (String)o[2];
 			if ((int)o[3]==0)
@@ -153,7 +155,7 @@ public class DatabaseConnector extends MySQLProvider {
 	public int GetMeetingMembersCount(long meetingID) {
 		ArrayList<Object[]> r = ExecuteStoredProcedure(connection, "getMeetingMembersCount", new Object[] { meetingID });
 		Object[] o = r.get(0);
-		return (int)o[0];
+		return (int)(long)o[0];
 	}
 
 	@Override
@@ -167,7 +169,7 @@ public class DatabaseConnector extends MySQLProvider {
 	public boolean UpdateMeetingTime(long meetingID, Date startDate, Date endDate, Date duration) {
 		ArrayList<Object[]> r = ExecuteStoredProcedure(connection, "updateMeetingTime", new Object[] { meetingID, startDate,
 				endDate, duration });
-		return false;
+		return true;
 	}
 
 	@Override
@@ -178,9 +180,9 @@ public class DatabaseConnector extends MySQLProvider {
 	}
 	
 	public int LeaveMeeting(long meetingID, long userID) {
-		ArrayList<Object[]> r = ExecuteStoredProcedure(connection, "leaveMeeting", new Object[] { meetingID, userID });
+		ArrayList<Object[]> r = ExecuteStoredProcedure(connection, "leaveMeeting", new Object[] { userID, meetingID });
 		Object[] o = r.get(0);
-		return (int)o[0];
+		return (int)(long)o[0];
 		
 	}
 	
