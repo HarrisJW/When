@@ -104,6 +104,12 @@ public class CreateMeetingView extends ILoggedInView {
 		// String password, Date startDate, Date endDate, String name, Date duration, long userID
 		// Update text entry fields to reflect same.
 		
+		if(tbMeetingPassword.getValue() != tbConfirmMeetingPassword.getValue()){
+			setErrorMessage("Passwords must match!");
+			return;
+			
+		}
+		
 		int code = (int) Controllers.DatabaseConnector.CreateMeeting(tbMeetingPassword.getValue(), 
 				tbMeetingStartDate.getValue(), tbMeetingEndDate.getValue(),
 				tbMeetingName.getValue(),
