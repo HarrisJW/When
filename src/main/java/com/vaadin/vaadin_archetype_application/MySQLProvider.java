@@ -100,9 +100,11 @@ public abstract class MySQLProvider implements DBProvider {
 					if (params[i] instanceof String)
 						cs.setString(i + 1, (String)params[i]);
 					else if (params[i] instanceof Date)
-						cs.setDate(i + 1, (java.sql.Date)params[i]);
+						cs.setDate(i + 1, new java.sql.Date(((Date)params[i]).getTime()));
 					else if (params[i] instanceof Integer)
 						cs.setInt(i + 1, (int)params[i]);
+					else if (params[i] instanceof Long)
+						cs.setLong(i + 1, (long)params[i]);
 			
 			ResultSet rs = cs.executeQuery();
 			ArrayList<Object[]> results = ReadSQLOutput(rs);

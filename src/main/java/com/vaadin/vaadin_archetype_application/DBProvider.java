@@ -35,7 +35,7 @@ public interface DBProvider {
 	
 	public class MeetingDescription
 	{
-		public int ID;
+		public long ID;
 		public String code;
 		public String name;
 		public Date startDate, endDate, duration;
@@ -44,7 +44,7 @@ public interface DBProvider {
 	
 	public class MeetingShortDescription
 	{
-		public int ID;
+		public long ID;
 		public String name;
 		public byte state;
 		public int numberOfMembers;
@@ -52,20 +52,20 @@ public interface DBProvider {
 	
 	public class MeetingMember
 	{
-		public int ID;
+		public long ID;
 		public String firstName, lastName;
 		public UserAccess access;
 	}
 	
-	public int TryJoinMeeting(String meetingCode, String meetingPassword, int userID);
-	public int CreateMeeting(String password, Date startDate, Date endDate, String name, Date duration, int userID);
-	public boolean DeleteMeeting(int meetingID);//Don't call this in prod
-	public MeetingDescription GetMeetingDescription(int meetingID);
-	public ArrayList<MeetingShortDescription> GetMeetingsList(int userID);
-	public ArrayList<MeetingMember> GetMeetingMembers(int meetingID);
-	public int GetMeetingMembersCount(int meetingID);
-	public int GetUserID(String email);
-	public boolean UpdateMeetingTime(int meetingID, Date startDate, Date endDate, Date duration);
-	public int CreateUser(String firstName, String lastName, String email, String googleID);
-	public int LeaveMeeting(int meetingID, int userID);
+	public int TryJoinMeeting(String meetingCode, String meetingPassword, long userID);
+	public long CreateMeeting(String password, Date startDate, Date endDate, String name, Date duration, long userID);
+	public boolean DeleteMeeting(long meetingID);//Don't call this in prod
+	public MeetingDescription GetMeetingDescription(long meetingID);
+	public ArrayList<MeetingShortDescription> GetMeetingsList(long userID);
+	public ArrayList<MeetingMember> GetMeetingMembers(long meetingID);
+	public int GetMeetingMembersCount(long meetingID);
+	public long GetUserID(String email);
+	public boolean UpdateMeetingTime(long meetingID, Date startDate, Date endDate, Date duration);
+	public long CreateUser(String firstName, String lastName, String email, String googleID);
+	public int LeaveMeeting(long meetingID, long userID);
 }
