@@ -7,13 +7,12 @@ import java.util.Date;
 
 import org.junit.Test;
 
-import com.vaadin.vaadin_archetype_application.Constants;
 import com.vaadin.vaadin_archetype_application.DBProvider;
-import com.vaadin.vaadin_archetype_application.DBProvider.MeetingDescription;
-import com.vaadin.vaadin_archetype_application.DBProvider.MeetingMember;
-import com.vaadin.vaadin_archetype_application.DBProvider.MeetingShortDescription;
-import com.vaadin.vaadin_archetype_application.DBProvider.UserAccess;
 import com.vaadin.vaadin_archetype_application.DatabaseConnector;
+import com.vaadin.vaadin_archetype_application.Meeting;
+import com.vaadin.vaadin_archetype_application.Meeting.MeetingState;
+import com.vaadin.vaadin_archetype_application.MeetingMember;
+import com.vaadin.vaadin_archetype_application.MeetingMember.UserAccess;
 
 public class DatabaseConnectorTest {
 	
@@ -56,16 +55,14 @@ public class DatabaseConnectorTest {
 		System.out.println(mid1);
 		
 		//Get meeting description
-		MeetingDescription md1 = dbc.GetMeetingDescription(mid1);
-		MeetingDescription md2 = dbc.GetMeetingDescription(mid2);
-		//assertEquals(1000*60*60*2, md1.duration.getTime());
-		//assertEquals(d, md1.endDate);
-		//assertEquals(d, md1.endDate);
+		Meeting md1 = dbc.GetMeetingDescription(mid1);
+		Meeting md2 = dbc.GetMeetingDescription(mid2);
 		assertEquals(mid1, md1.ID);
 		assertEquals("m1", md1.name);
-		assertEquals(DBProvider.MeetingState.Setup, md1.state);
+		assertEquals(MeetingState.Setup, md1.state);
+		assertEquals(1, md1.membersCount);
+		assertEquals(1, md1.members.size());
 		
-		//TODO
 		//Join meetings
 		assertNotSame(0, dbc.TryJoinMeeting(md2.code, "", uid1));
 		assertEquals(0, dbc.TryJoinMeeting(md2.code, "asdf", uid1));
@@ -73,16 +70,18 @@ public class DatabaseConnectorTest {
 		assertNotSame(0, dbc.TryJoinMeeting(md1.code, "", uid1));
 		
 		//Get meetings list
-		ArrayList<MeetingShortDescription> msd = dbc.GetMeetingsList(uid1);
+		ArrayList<Meeting> msd = dbc.GetMeetingsList(uid1);
 		assertEquals(2, msd.size());
 		assertEquals(mid1, msd.get(0).ID);
 		assertEquals(mid2, msd.get(1).ID);
 		assertEquals("m1", msd.get(0).name);
 		assertEquals("m2", msd.get(1).name);
-		assertEquals(0, msd.get(0).state);
-		assertEquals(0, msd.get(1).state);
-		assertEquals(1, msd.get(0).numberOfMembers);
-		assertEquals(2, msd.get(1).numberOfMembers);
+		assertEquals(MeetingState.Setup, msd.get(0).state);
+		assertEquals(MeetingState.Setup, msd.get(1).state);
+		assertEquals(1, msd.get(0).membersCount);
+		assertEquals(2, msd.get(1).membersCount);
+		assertEquals(1, msd.get(0).members.size());
+		assertEquals(2, msd.get(1).members.size());
 		
 		//Get meeting members
 		ArrayList<MeetingMember> mem = dbc.GetMeetingMembers(mid2);
@@ -96,32 +95,22 @@ public class DatabaseConnectorTest {
 		assertEquals("qwer", mem.get(0).lastName);
 		assertEquals("2qwer", mem.get(1).lastName);
 		
-		//Get meeting members count
-		assertEquals(1, dbc.GetMeetingMembersCount(mid1));
-		assertEquals(2, dbc.GetMeetingMembersCount(mid2));
-		
 		//Update meeting information
 		Date d2 = new Date();
 		assertEquals(true, dbc.UpdateMeetingTime(mid1, d2, d2, new Date(1000)));
 		md1 = dbc.GetMeetingDescription(mid1);
-		//assertEquals(1000*60*60*2, md1.duration);
-		//assertEquals(d, md1.endDate);
-		//assertEquals(d, md1.endDate);
 		assertEquals(mid1, md1.ID);
 		assertEquals("m1", md1.name);
-		assertEquals(DBProvider.MeetingState.Setup, md1.state);
+		assertEquals(MeetingState.Setup, md1.state);
 		
 		
 		//TODO check meeting state change, voting
 		//TODO delete everything if a test fails
-		//TODO date check
 		
 		//Leave meetings
 		System.out.println("asdf");
 		assertEquals(0, dbc.LeaveMeeting(mid2, uid1));
-		assertEquals(1, dbc.GetMeetingMembersCount(mid2));
 		assertNotSame(0, dbc.LeaveMeeting(mid2, uid2));
-		assertEquals(1, dbc.GetMeetingMembersCount(mid2));
 
 		//Delete meetings
 		assertEquals(0, dbc.TryJoinMeeting(md2.code, "asdf", uid1));
