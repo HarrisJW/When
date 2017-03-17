@@ -82,8 +82,48 @@ public abstract class MySQLProvider implements DBProvider {
 	}
 	
 	@Override
-	public ArrayList<Object[]> ExecuteStoredProcedure(Connection connection, String name, Object[] params)
+	public boolean ExecuteStoredProcedure(Connection connection, String name, Object[] params)
 	{
+		System.out.println(name);
+		
+		String sParams = "";
+		if (params != null && params.length != 0)
+		{
+			for (int i = 0; i < params.length; i++)
+				sParams += "?,";
+			sParams = "(" + sParams.substring(0, sParams.length() - 1) + ")";
+		}
+		
+		try
+		{
+			CallableStatement cs = connection.prepareCall("{ call " + name + sParams + "}");
+			if (params != null)
+				for (int i = 0; i < params.length; i++)
+					if (params[i] instanceof String)
+						cs.setString(i + 1, (String)params[i]);
+					else if (params[i] instanceof Date)
+						cs.setDate(i + 1, new java.sql.Date(((Date)params[i]).getTime()));
+					else if (params[i] instanceof Integer)
+						cs.setInt(i + 1, (int)params[i]);
+					else if (params[i] instanceof Long)
+						cs.setLong(i + 1, (long)params[i]);
+			
+			ResultSet rs = cs.executeQuery();
+			rs.close();
+			return true;
+		}
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	@Override
+	public ArrayList<Object[]> ExecuteStoredProcedureRead(Connection connection, String name, Object[] params)
+	{
+		System.out.println(name);
+		
 		String sParams = "";
 		if (params != null && params.length != 0)
 		{

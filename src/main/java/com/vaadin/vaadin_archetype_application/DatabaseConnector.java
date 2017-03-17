@@ -59,7 +59,7 @@ public class DatabaseConnector extends MySQLProvider {
 		
 		try
 		{
-			ArrayList<Object[]> r = ExecuteStoredProcedure(connection, "joinMeeting", new Object[] { userID, meetingID, meetingPassword });
+			ArrayList<Object[]> r = ExecuteStoredProcedureRead(connection, "joinMeeting", new Object[] { userID, meetingID, meetingPassword });
 			Object[] o = r.get(0);
 			return (int)(long)o[0];
 		}
@@ -73,7 +73,7 @@ public class DatabaseConnector extends MySQLProvider {
 	
 	@Override
 	public long CreateMeeting(String password, Date startDate, Date endDate, String name, Date duration, long userID) {
-		ArrayList<Object[]> r = ExecuteStoredProcedure(connection, "createMeeting", new Object[] { password, startDate,
+		ArrayList<Object[]> r = ExecuteStoredProcedureRead(connection, "createMeeting", new Object[] { password, startDate,
 				endDate, name, duration, userID });
 		Object[] o = r.get(0);
 		return (int)o[0];
@@ -81,13 +81,12 @@ public class DatabaseConnector extends MySQLProvider {
 
 	@Override
 	public boolean DeleteMeeting(long meetingID) {
-		ArrayList<Object[]> r = ExecuteStoredProcedure(connection, "deleteMeeting", new Object[] { meetingID });
-		return true;
+		return ExecuteStoredProcedure(connection, "deleteMeeting", new Object[] { meetingID });
 	}
 
 	@Override
 	public MeetingDescription GetMeetingDescription(long meetingID) {
-		ArrayList<Object[]> r = ExecuteStoredProcedure(connection, "getMeetingDescription", new Object[] { meetingID });
+		ArrayList<Object[]> r = ExecuteStoredProcedureRead(connection, "getMeetingDescription", new Object[] { meetingID });
 		if (r.size() == 0)
 			return null;
 		Object[] o = r.get(0);
@@ -111,7 +110,7 @@ public class DatabaseConnector extends MySQLProvider {
 
 	@Override
 	public ArrayList<MeetingShortDescription> GetMeetingsList(long userID) {
-		ArrayList<Object[]> r = ExecuteStoredProcedure(connection, "getMeetingList", new Object[] { userID });
+		ArrayList<Object[]> r = ExecuteStoredProcedureRead(connection, "getMeetingList", new Object[] { userID });
 		Object[] o;
 		ArrayList<MeetingShortDescription> meetingDescriptions = new ArrayList<MeetingShortDescription>();
 		for (int i = 0; i < r.size(); i++)
@@ -129,7 +128,7 @@ public class DatabaseConnector extends MySQLProvider {
 
 	@Override
 	public ArrayList<MeetingMember> GetMeetingMembers(long meetingID) {
-		ArrayList<Object[]> r = ExecuteStoredProcedure(connection, "getMeetingMembers", new Object[] { meetingID });
+		ArrayList<Object[]> r = ExecuteStoredProcedureRead(connection, "getMeetingMembers", new Object[] { meetingID });
 		Object[] o;
 		ArrayList<MeetingMember> meetingMembers = new ArrayList<MeetingMember>();
 		for (int i = 0; i < r.size(); i++)
@@ -153,34 +152,34 @@ public class DatabaseConnector extends MySQLProvider {
 
 	@Override
 	public int GetMeetingMembersCount(long meetingID) {
-		ArrayList<Object[]> r = ExecuteStoredProcedure(connection, "getMeetingMembersCount", new Object[] { meetingID });
+		ArrayList<Object[]> r = ExecuteStoredProcedureRead(connection, "getMeetingMembersCount", new Object[] { meetingID });
 		Object[] o = r.get(0);
 		return (int)(long)o[0];
 	}
 
 	@Override
 	public long GetUserID(String email) {
-		ArrayList<Object[]> r = ExecuteStoredProcedure(connection, "getUserID", new Object[] { email });
+		ArrayList<Object[]> r = ExecuteStoredProcedureRead(connection, "getUserID", new Object[] { email });
 		Object[] o = r.get(0);
 		return (int)o[0];
 	}
 
 	@Override
 	public boolean UpdateMeetingTime(long meetingID, Date startDate, Date endDate, Date duration) {
-		ArrayList<Object[]> r = ExecuteStoredProcedure(connection, "updateMeetingTime", new Object[] { meetingID, startDate,
+		ArrayList<Object[]> r = ExecuteStoredProcedureRead(connection, "updateMeetingTime", new Object[] { meetingID, startDate,
 				endDate, duration });
 		return true;
 	}
 
 	@Override
 	public long CreateUser(String firstName, String lastName, String email, String googleID) {
-		ArrayList<Object[]> r = ExecuteStoredProcedure(connection, "createUser", new Object[] { email, firstName, lastName, googleID });
+		ArrayList<Object[]> r = ExecuteStoredProcedureRead(connection, "createUser", new Object[] { email, firstName, lastName, googleID });
 		Object[] o = r.get(0);
 		return (int)o[0];
 	}
 	
 	public int LeaveMeeting(long meetingID, long userID) {
-		ArrayList<Object[]> r = ExecuteStoredProcedure(connection, "leaveMeeting", new Object[] { userID, meetingID });
+		ArrayList<Object[]> r = ExecuteStoredProcedureRead(connection, "leaveMeeting", new Object[] { userID, meetingID });
 		Object[] o = r.get(0);
 		return (int)(long)o[0];
 		

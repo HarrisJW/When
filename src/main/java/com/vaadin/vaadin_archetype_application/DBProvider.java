@@ -8,7 +8,8 @@ public interface DBProvider {
 	public Connection OpenConnection(String connectionString);
 	public ArrayList<Object[]> ExecuteQuery(Connection connection, String query);
 	public boolean Execute(Connection connection, String query);
-	public ArrayList<Object[]> ExecuteStoredProcedure(Connection connection, String name, Object[] params);
+	public boolean ExecuteStoredProcedure(Connection connection, String name, Object[] params);
+	public ArrayList<Object[]> ExecuteStoredProcedureRead(Connection connection, String name, Object[] params);
 	
 	
 	
