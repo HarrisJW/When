@@ -42,14 +42,14 @@ public interface DBProvider {
 		public Date startDate, endDate, duration;
 		public MeetingState state;
 	}
-	
-	public class MeetingShortDescription
-	{
-		public long ID;
-		public String name;
-		public byte state;
-		public int numberOfMembers;
-	}
+//	
+//	public class MeetingShortDescription
+//	{
+//		public long ID;
+//		public String name;
+//		public byte state;
+//		public int numberOfMembers;
+//	}
 	
 	public class MeetingMember
 	{

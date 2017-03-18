@@ -11,7 +11,7 @@ import com.vaadin.vaadin_archetype_application.Constants;
 import com.vaadin.vaadin_archetype_application.DBProvider;
 import com.vaadin.vaadin_archetype_application.DBProvider.MeetingDescription;
 import com.vaadin.vaadin_archetype_application.DBProvider.MeetingMember;
-import com.vaadin.vaadin_archetype_application.DBProvider.MeetingShortDescription;
+import com.vaadin.vaadin_archetype_application.MeetingShortDescription;
 import com.vaadin.vaadin_archetype_application.DBProvider.UserAccess;
 import com.vaadin.vaadin_archetype_application.DatabaseConnector;
 
@@ -79,10 +79,10 @@ public class DatabaseConnectorTest {
 		assertEquals(mid2, msd.get(1).ID);
 		assertEquals("m1", msd.get(0).name);
 		assertEquals("m2", msd.get(1).name);
-		assertEquals(0, msd.get(0).state);
-		assertEquals(0, msd.get(1).state);
-		assertEquals(1, msd.get(0).numberOfMembers);
-		assertEquals(2, msd.get(1).numberOfMembers);
+		assertEquals((Integer)0, msd.get(0).state);
+		assertEquals((Integer)0, msd.get(1).state);
+		assertEquals((Integer)1, msd.get(0).numberOfMembers);
+		assertEquals((Integer)2, msd.get(1).numberOfMembers);
 		
 		//Get meeting members
 		ArrayList<MeetingMember> mem = dbc.GetMeetingMembers(mid2);
