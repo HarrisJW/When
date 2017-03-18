@@ -17,6 +17,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.plus.Plus;
+import java.sql.*;
 
 public class AllMeetingsView extends ILoggedInView {
 	
@@ -57,10 +58,14 @@ public class AllMeetingsView extends ILoggedInView {
 		// List of Meetings from database connector.
 		//List<MeetingShortDescription> meetingList = Controllers.DatabaseConnector.GetMeetingsList(
 		//		Controllers.DatabaseConnector.GetUserID(profile.getEmails().toString()));
-		Controllers.DatabaseConnector.CreateMeeting("Cats", null, null, "Test Meeting", null, 
-				Controllers.DatabaseConnector.GetUserID("j.wilfred.harris@gmail.com"));
-			
+		
 		Controllers.DatabaseConnector.CreateUser("Jonathan", "Harris", "j.wilfred.harris@gmail.com", "j.wilfred.harris");
+		
+		Controllers.DatabaseConnector.CreateMeeting("Cats", new Date((new java.util.Date()).getTime()), 
+				new Date((new java.util.Date()).getTime()), 
+				"Test Meeting",
+				new Date((new java.util.Date()).getTime()), 
+				Controllers.DatabaseConnector.GetUserID("j.wilfred.harris@gmail.com"));
 		
 		List<MeetingShortDescription> meetingList = Controllers.DatabaseConnector.GetMeetingsList(
 				Controllers.DatabaseConnector.GetUserID("j.wilfred.harris@gmail.com"));
@@ -74,7 +79,7 @@ public class AllMeetingsView extends ILoggedInView {
 		BeanItemContainer<MeetingShortDescription> container = 
 				new BeanItemContainer<MeetingShortDescription>(MeetingShortDescription.class);
 		
-		// As per 
+		// As per example at:
 		// https://vaadin.com/forum#!/thread/9934386/9934385
 		for (MeetingShortDescription meeting : meetingList) {
 
