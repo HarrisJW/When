@@ -139,7 +139,6 @@ public abstract class MySQLProvider implements DBProvider {
 	public ArrayList<Object[]> ExecuteStoredProcedureRead(Connection connection, String name, Object[] params)
 	{
 		System.out.println(name);
-		System.out.println(connection);
 		if (connection == null)
 		{
 			OpenConnection(Constants.dbConnectionString);

@@ -35,10 +35,8 @@ public class AllMeetingsView extends ILoggedInView {
 		try {
 			plus = new Plus.Builder(GoogleNetHttpTransport.newTrustedTransport(), JacksonFactory.getDefaultInstance(), credential).setApplicationName("When").build();
 		} catch (GeneralSecurityException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -47,45 +45,23 @@ public class AllMeetingsView extends ILoggedInView {
 		try {
 			profile = plus.people().get("me").execute();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		// As per example at:
 		// https://vaadin.com/framework
 		
-		// List of Meetings from database connector.
-		//List<MeetingShortDescription> meetingList = Controllers.DatabaseConnector.GetMeetingsList(
-		//		Controllers.DatabaseConnector.GetUserID(profile.getEmails().toString()));
-		
-		Controllers.DatabaseConnector.CreateUser("Jonathan", "Harris", "j.wilfred.harris@gmail.com", "j.wilfred.harris");
-		
-		/*
-		Controllers.DatabaseConnector.CreateMeeting("Cats", new Date((new java.util.Date()).getTime()), 
-				new Date((new java.util.Date()).getTime()), 
-				"Test Meeting",
-				new Date((new java.util.Date()).getTime()), 
-				Controllers.DatabaseConnector.GetUserID("j.wilfred.harris@gmail.com"));//*/
-		
-		List<Meeting> meetingList = Controllers.DatabaseConnector.GetMeetingsList(
-				Controllers.DatabaseConnector.GetUserID("j.wilfred.harris@gmail.com"));
-		
-		System.out.println(meetingList.size());
+		List<Meeting> meetingList = Controllers.DatabaseConnector.GetMeetingsList(Controllers.UserID);
 
 		Grid grid = new Grid();
-		
-		// grid.setContainerDataSource(new BeanItemContainer<>(MeetingShortDescription.class, meetingList));
-		
-		BeanItemContainer<Meeting> container = 
-				new BeanItemContainer<Meeting>(Meeting.class);
+		BeanItemContainer<Meeting> container = new BeanItemContainer<Meeting>(Meeting.class);
 		
 		// As per example at:
 		// https://vaadin.com/forum#!/thread/9934386/9934385
-		for (Meeting meeting : meetingList) {
-
+		for (Meeting meeting : meetingList) 
+		{
             // First we add the item
             container.addItem(meeting);
-
         }
 		
 		// container.addItem(meetingList);
@@ -96,8 +72,8 @@ public class AllMeetingsView extends ILoggedInView {
 	
 		// Define the columns to be displayed
 	
-		// grid.setColumns("ID", "name", "state");
-		// grid.setColumnOrder("ID", "name");
+		//grid.setColumns("ID", "name", "state");
+		//grid.setColumnOrder("ID", "name");
 		
 		layout.addComponent(grid);
 		

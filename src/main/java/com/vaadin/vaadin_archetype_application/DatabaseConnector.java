@@ -21,10 +21,8 @@ public class DatabaseConnector extends MySQLProvider {
 	{
 		try
 		{
-			System.out.println("existing connection is " + connection);
-			//if (connection == null || connection.isClosed())
-			connection = super.OpenConnection(conStr);
-			System.out.println("New connection is " + connection);
+			if (connection == null || connection.isClosed())
+				connection = super.OpenConnection(conStr);
 			return connection;
 		}
 		catch (Exception e)

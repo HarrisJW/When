@@ -42,21 +42,14 @@ public class Meeting {
 		return name;
 	}
 	
-	public String getStartTime(){
-		
-		return startDate.toString();
-		
-	}
-	
-	public String getEndTime(){
-		
-		return endDate.toString();
-		
-	}
-	
-	public String getMembersCountString()
+	public String getMembers()
 	{
 		return String.valueOf(membersCount);
+	}
+	
+	public String getState()
+	{
+		return state.toString();
 	}
 	
 	public void SetState(int s)
