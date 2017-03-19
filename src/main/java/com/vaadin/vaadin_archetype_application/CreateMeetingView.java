@@ -2,6 +2,7 @@ package com.vaadin.vaadin_archetype_application;
 
 import java.util.Date;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.DateField;
@@ -15,8 +16,8 @@ import com.vaadin.ui.VerticalLayout;
 public class CreateMeetingView extends ILoggedInView {
 
 	private TextField tbMeetingName;
-	private TextField tbMeetingCreatorEmailAddress;
-	private TextField tbMeetingParticipantEmailAddresses;
+	//private TextField tbMeetingCreatorEmailAddress;
+	//private TextField tbMeetingParticipantEmailAddresses;
 	private DateField tbMeetingStartDate;
 	private DateField tbMeetingEndDate;
 	private DateField tbMeetingDuration;
@@ -43,10 +44,13 @@ public class CreateMeetingView extends ILoggedInView {
 		tbMeetingStartDate = new DateField();
 		tbMeetingEndDate = new DateField();
 		tbMeetingDuration = new DateField();
-		tbMeetingCreatorEmailAddress = new TextField();
-		tbMeetingParticipantEmailAddresses = new TextField();
+		//tbMeetingCreatorEmailAddress = new TextField();
+		//tbMeetingParticipantEmailAddresses = new TextField();
 		tbMeetingPassword = new PasswordField();
 		tbConfirmMeetingPassword = new PasswordField();
+		
+		tbMeetingPassword.setRequired(false);
+		tbConfirmMeetingPassword.setRequired(false);
 		
 		lErrorMessage = new Label("", ContentMode.HTML);
 		
@@ -55,32 +59,33 @@ public class CreateMeetingView extends ILoggedInView {
 		layout.setSpacing(true);
 		layout.setMargin(true);
 		
-		GridLayout gl = new GridLayout(2,8);//Grid layout for text fields
+		GridLayout gl = new GridLayout(2,6);//Grid layout for text fields
 		gl.setSpacing(true);
+		int row = 0;
 		
-		gl.addComponent(new Label("Meeting Name: "), 0, 0);
-		gl.addComponent(tbMeetingName, 1, 0);
+		gl.addComponent(new Label("Meeting Name: "), 0, row);
+		gl.addComponent(tbMeetingName, 1, row++);
 		
-		gl.addComponent(new Label("Meeting Password: "), 0, 1);
-		gl.addComponent(tbMeetingPassword, 1, 1);
+		gl.addComponent(new Label("Meeting Password: "), 0, row);
+		gl.addComponent(tbMeetingPassword, 1, row++);
 		
-		gl.addComponent(new Label("Confirm meeting Password: "), 0, 2);
-		gl.addComponent(tbConfirmMeetingPassword, 1, 2);
+		gl.addComponent(new Label("Confirm meeting Password: "), 0, row);
+		gl.addComponent(tbConfirmMeetingPassword, 1, row++);
 		
-		gl.addComponent(new Label("Meeting creator email address: "), 0, 3);
-		gl.addComponent(tbMeetingCreatorEmailAddress, 1, 3);
+		//gl.addComponent(new Label("Meeting creator email address: "), 0, 3);
+		//gl.addComponent(tbMeetingCreatorEmailAddress, 1, 3);
 		
-		gl.addComponent(new Label("Meeting participant email addresses: "), 0, 4);
-		gl.addComponent(tbMeetingParticipantEmailAddresses, 1, 4);
+		//gl.addComponent(new Label("Meeting participant email addresses: "), 0, 4);
+		//gl.addComponent(tbMeetingParticipantEmailAddresses, 1, 4);
 		
-		gl.addComponent(new Label("Meeting start date: "), 0, 5);
-		gl.addComponent(tbMeetingStartDate, 1, 5);
+		gl.addComponent(new Label("Meeting start date: "), 0, row);
+		gl.addComponent(tbMeetingStartDate, 1, row++);
 		
-		gl.addComponent(new Label("Meeting end date: "), 0, 6);
-		gl.addComponent(tbMeetingEndDate, 1, 6);
+		gl.addComponent(new Label("Meeting end date: "), 0, row);
+		gl.addComponent(tbMeetingEndDate, 1, row++);
 		
-		gl.addComponent(new Label("Meeting duration: "), 0, 7);
-		gl.addComponent(tbMeetingDuration, 1, 7);
+		gl.addComponent(new Label("Meeting duration: "), 0, row);
+		gl.addComponent(tbMeetingDuration, 1, row++);
 		
 		layout.addComponent(gl);
 		
@@ -110,11 +115,13 @@ public class CreateMeetingView extends ILoggedInView {
 			
 		}
 		
+		System.out.println(UserManager.GetUserEmailAddress());
+		
 		int code = (int) Controllers.DatabaseConnector.CreateMeeting(tbMeetingPassword.getValue(), 
 				tbMeetingStartDate.getValue(), tbMeetingEndDate.getValue(),
 				tbMeetingName.getValue(),
 				tbMeetingDuration.getValue(),
-				Controllers.DatabaseConnector.GetUserID(tbMeetingCreatorEmailAddress.getValue()));
+				Controllers.DatabaseConnector.GetUserID(UserManager.GetUserEmailAddress()));
 		
 		switch (code) {
 		

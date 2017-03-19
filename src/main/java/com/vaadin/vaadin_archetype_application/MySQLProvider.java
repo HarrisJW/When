@@ -14,6 +14,7 @@ public abstract class MySQLProvider implements DBProvider {
 	@Override
 	public Connection OpenConnection(String connectionString)
 	{
+		System.out.println("Opening sql connection");
 		try 
 		{
 			return DriverManager.getConnection(connectionString);
@@ -50,6 +51,11 @@ public abstract class MySQLProvider implements DBProvider {
 	@Override
 	public ArrayList<Object[]> ExecuteQuery(Connection connection, String query)
 	{
+		if (connection == null)
+		{
+			OpenConnection(Constants.dbConnectionString);
+			connection = GetConnection();
+		}
 		try 
 		{
 			Statement st = connection.createStatement();
@@ -68,6 +74,11 @@ public abstract class MySQLProvider implements DBProvider {
 	@Override
 	public boolean Execute(Connection connection, String query)
 	{
+		if (connection == null)
+		{
+			OpenConnection(Constants.dbConnectionString);
+			connection = GetConnection();
+		}
 		try 
 		{
 			Statement st = connection.createStatement();
@@ -85,6 +96,11 @@ public abstract class MySQLProvider implements DBProvider {
 	public boolean ExecuteStoredProcedure(Connection connection, String name, Object[] params)
 	{
 		System.out.println(name);
+		if (connection == null)
+		{
+			OpenConnection(Constants.dbConnectionString);
+			connection = GetConnection();
+		}
 		
 		String sParams = "";
 		if (params != null && params.length != 0)
@@ -123,6 +139,12 @@ public abstract class MySQLProvider implements DBProvider {
 	public ArrayList<Object[]> ExecuteStoredProcedureRead(Connection connection, String name, Object[] params)
 	{
 		System.out.println(name);
+		System.out.println(connection);
+		if (connection == null)
+		{
+			OpenConnection(Constants.dbConnectionString);
+			connection = GetConnection();
+		}
 		
 		String sParams = "";
 		if (params != null && params.length != 0)

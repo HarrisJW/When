@@ -1,5 +1,14 @@
 package com.vaadin.vaadin_archetype_application;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.services.plus.Plus;
+import com.google.api.services.plus.model.Person;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 
 public final class UserManager {
@@ -10,6 +19,7 @@ public final class UserManager {
 	public static boolean AssureLogin(String targetView)
 	{
 		if (IsLoggedIn())
+		//if (true)
 			return true;
 		else
 		{
@@ -24,5 +34,30 @@ public final class UserManager {
 	public static boolean IsLoggedIn()
 	{
 		return UI.getCurrent().getSession().getAttribute("credential") != null;
+	}
+	
+	public static String GetUserEmailAddress()
+	{
+		GoogleCredential credential = (GoogleCredential) UI.getCurrent().getSession().getAttribute("credential");
+		Plus plus = null;
+		
+		try {
+			plus = new Plus.Builder(GoogleNetHttpTransport.newTrustedTransport(), JacksonFactory.getDefaultInstance(), credential).setApplicationName("When").build();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		if (plus!=null) {
+			try {
+				Person profile = plus.people().get("me").execute();
+				return profile.getEmails().toString();
+			} 
+			catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return "";
 	}
 }

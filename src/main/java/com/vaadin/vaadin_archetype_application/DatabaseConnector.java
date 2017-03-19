@@ -13,7 +13,25 @@ public class DatabaseConnector extends MySQLProvider {
 	//Opens db connection
 	public void Initialize()
 	{
-		connection = OpenConnection(Constants.dbConnectionString);
+		OpenConnection(Constants.dbConnectionString);
+	}
+	
+	@Override
+	public Connection OpenConnection(String conStr)
+	{
+		try
+		{
+			System.out.println("existing connection is " + connection);
+			//if (connection == null || connection.isClosed())
+			connection = super.OpenConnection(conStr);
+			System.out.println("New connection is " + connection);
+			return connection;
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	//Closes connection

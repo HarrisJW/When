@@ -20,9 +20,6 @@ public class Meeting {
 	public MeetingState state;
 	public int membersCount;
 	public ArrayList<MeetingMember> members;
-
-	private String startTime = "asdf";
-	private String endTime = "qwer";
 	
 	public Meeting()
 	{
