@@ -42,6 +42,8 @@ public class DatabaseConnector extends MySQLProvider {
 		return connection;
 	}
 	
+
+	
 	//Function that checks if meeting ID and password correspond to any existing ones and 
 	//joins users to that meeting
 	@Override
@@ -174,7 +176,6 @@ public class DatabaseConnector extends MySQLProvider {
 		return (int)(long)o[0];
 		
 	}
-	
 	
 	
 }

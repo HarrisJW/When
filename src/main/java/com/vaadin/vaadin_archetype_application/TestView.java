@@ -34,27 +34,74 @@ public class TestView extends Panel implements View {
 		layout.setSpacing(true);
 		layout.setMargin(true);
 		
+		//*****************************************************************************
+		// Login button.
+		//*****************************************************************************
+		
 		Button bLogin = new Button("Login");
+		bLogin.setId("Login");
 		bLogin.addClickListener(new ClickListener() {
 			
-			//Join meeting button click handler. Communicates with DB and changes state according to the return code
+			// Login button click handler. Communicates with DB and changes state according to the return code
 			@Override
 			public void buttonClick(ClickEvent event) {
+				
 				UI.getCurrent().getNavigator().navigateTo(Constants.URL_LOGIN);
 			}
 		});
+		
 		layout.addComponent(bLogin);
 
+		//*****************************************************************************
+		// Join meeting button.
+		//*****************************************************************************
+		
 		Button bJoinMeeting = new Button("Join meeting");
+		bJoinMeeting.setId("JoinMeeting");
 		bJoinMeeting.addClickListener(new ClickListener() {
 			
-			//Join meeting button click handler. Communicates with DB and changes state according to the return code
+			// Join meeting button click handler. Communicates with DB and changes state according to the return code
 			@Override
 			public void buttonClick(ClickEvent event) {
 				UI.getCurrent().getNavigator().navigateTo(Constants.URL_JOIN_MEETING);
 			}
 		});
+		
 		layout.addComponent(bJoinMeeting);
+		
+		//*****************************************************************************
+		// Create meeting button.
+		//*****************************************************************************
+		
+		Button bCreateMeeting = new Button("Create meeting");
+		bCreateMeeting.setId("CreateMeeting");
+		bCreateMeeting.addClickListener(new ClickListener() {
+			
+			// Join meeting button click handler. Communicates with DB and changes state according to the return code
+			@Override
+			public void buttonClick(ClickEvent event) {
+				UI.getCurrent().getNavigator().navigateTo(Constants.URL_CREATE_MEETING);
+			}
+		});
+		
+		layout.addComponent(bCreateMeeting);
+		
+		//*****************************************************************************
+		// View meeting button.
+		//*****************************************************************************
+		
+		Button bViewAllMeetings = new Button("View meetings");
+		bViewAllMeetings.setId("ViewMeetings");
+		bViewAllMeetings.addClickListener(new ClickListener() {
+			
+			// Join meeting button click handler. Communicates with DB and changes state according to the return code
+			@Override
+			public void buttonClick(ClickEvent event) {
+				UI.getCurrent().getNavigator().navigateTo(Constants.URL_ALL_MEETINGS);
+			}
+		});
+		
+		layout.addComponent(bViewAllMeetings);
 		
 		setContent(layout);
 	}

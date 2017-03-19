@@ -42,6 +42,9 @@ public class MyUI extends UI {
     	navigator.addView(Constants.URL_LOGGED_ON, new LoggedOnView());
     	navigator.addView(Constants.URL_JOIN_MEETING, new JoinMeetingView());
     	navigator.addView(Constants.URL_MEETING_OVERVIEW, new MeetingOverviewView());
+    	navigator.addView(Constants.URL_CREATE_MEETING, new CreateMeetingView());
+    	navigator.addView(Constants.URL_INDIVIDUAL_MEETING, new IndividualMeetingView());
+    	navigator.addView(Constants.URL_ALL_MEETINGS, new AllMeetingsView());
     	
     	Controllers.DatabaseConnector.Initialize();
     }

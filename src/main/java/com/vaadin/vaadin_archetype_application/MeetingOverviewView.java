@@ -16,8 +16,8 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 
-//Meeting overview page
-//TODO
+// Meeting overview page
+// TODO
 public class MeetingOverviewView extends ILoggedInView {
 
 	@Override
