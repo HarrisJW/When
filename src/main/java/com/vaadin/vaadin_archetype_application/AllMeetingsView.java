@@ -12,7 +12,6 @@ import com.vaadin.ui.Grid;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.vaadin_archetype_application.DBProvider.MeetingShortDescription;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
@@ -61,13 +60,14 @@ public class AllMeetingsView extends ILoggedInView {
 		
 		Controllers.DatabaseConnector.CreateUser("Jonathan", "Harris", "j.wilfred.harris@gmail.com", "j.wilfred.harris");
 		
+		/*
 		Controllers.DatabaseConnector.CreateMeeting("Cats", new Date((new java.util.Date()).getTime()), 
 				new Date((new java.util.Date()).getTime()), 
 				"Test Meeting",
 				new Date((new java.util.Date()).getTime()), 
-				Controllers.DatabaseConnector.GetUserID("j.wilfred.harris@gmail.com"));
+				Controllers.DatabaseConnector.GetUserID("j.wilfred.harris@gmail.com"));//*/
 		
-		List<MeetingShortDescription> meetingList = Controllers.DatabaseConnector.GetMeetingsList(
+		List<Meeting> meetingList = Controllers.DatabaseConnector.GetMeetingsList(
 				Controllers.DatabaseConnector.GetUserID("j.wilfred.harris@gmail.com"));
 		
 		System.out.println(meetingList.size());
@@ -76,12 +76,12 @@ public class AllMeetingsView extends ILoggedInView {
 		
 		// grid.setContainerDataSource(new BeanItemContainer<>(MeetingShortDescription.class, meetingList));
 		
-		BeanItemContainer<MeetingShortDescription> container = 
-				new BeanItemContainer<MeetingShortDescription>(MeetingShortDescription.class);
+		BeanItemContainer<Meeting> container = 
+				new BeanItemContainer<Meeting>(Meeting.class);
 		
 		// As per example at:
 		// https://vaadin.com/forum#!/thread/9934386/9934385
-		for (MeetingShortDescription meeting : meetingList) {
+		for (Meeting meeting : meetingList) {
 
             // First we add the item
             container.addItem(meeting);
