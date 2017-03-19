@@ -11,7 +11,7 @@ import com.vaadin.testbench.TestBenchTestCase;
 import com.vaadin.testbench.elements.ButtonElement;
 import com.vaadin.testbench.elements.LabelElement;
 
-public class AllMeetingsViewTest extends TestBenchTestCase {
+public class JoinMeetingViewTest extends TestBenchTestCase {
 	
 	// https://vaadin.com/forum/#!/thread/11023921/14736435
 	// WARNING: Could not open/create prefs root node Software\JavaSoft\Prefs at root 0x80000002. Windows RegCreateKeyEx(...) returned error code 5.
@@ -35,12 +35,12 @@ public class AllMeetingsViewTest extends TestBenchTestCase {
 	}
 
 	@Test
-	public void testViewMeetingsButton() throws Exception{
+	public void joinMeetingButton() throws Exception{
 		
 		openTestUrl();
 		
-		ButtonElement viewMeetingButton = $(ButtonElement.class).caption("View meetings").first();
-		viewMeetingButton.click();
+		ButtonElement joinMeetingButton = $(ButtonElement.class).caption("Join meeting").first();
+		joinMeetingButton.click();
 		
 		assertEquals("You need to be logged in to access this page", $(LabelElement.class).first().getText());
 
@@ -54,4 +54,3 @@ public class AllMeetingsViewTest extends TestBenchTestCase {
 	}
 
 }
-

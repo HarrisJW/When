@@ -40,14 +40,14 @@ public class CreateMeetingViewTest extends TestBenchTestCase {
 	}
 
 	@Test
-	public void testJoinMeetingButton() throws Exception{
+	public void testCreateMeetingButton() throws Exception{
 		
 		openTestUrl();
 		
 		//assertFalse($(LabelElement.class).exists());
 
-		ButtonElement joinMeetingButton = $(ButtonElement.class).caption("Join meeting").first();
-		joinMeetingButton.click();
+		ButtonElement createMeetingButton = $(ButtonElement.class).caption("Create meeting").first();
+		createMeetingButton.click();
 		
 		assertEquals("You need to be logged in to access this page", $(LabelElement.class).first().getText());
 
