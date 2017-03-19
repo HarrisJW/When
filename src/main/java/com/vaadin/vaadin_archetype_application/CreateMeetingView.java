@@ -121,7 +121,7 @@ public class CreateMeetingView extends ILoggedInView {
 				tbMeetingStartDate.getValue(), tbMeetingEndDate.getValue(),
 				tbMeetingName.getValue(),
 				tbMeetingDuration.getValue(),
-				Controllers.DatabaseConnector.GetUserID(UserManager.GetUserEmailAddress()));
+				Controllers.UserID);
 		
 		switch (code) {
 		

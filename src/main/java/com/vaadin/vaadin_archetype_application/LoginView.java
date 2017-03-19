@@ -87,6 +87,11 @@ public class LoginView extends Panel implements View {
         			// Set the UI's credential attribute equal to the one we just created,
         			// so that it can be accessed later by LoggedOnView.
         			UI.getCurrent().getSession().setAttribute("credential", credential);
+
+        			String email = UserManager.GetUserEmailAddress();
+        			if ((Controllers.UserID = Controllers.DatabaseConnector.GetUserID(email)) == -1)
+        				Controllers.UserID = Controllers.DatabaseConnector.CreateUser(UserManager.GetUserDisplayName(), "", 
+        						UserManager.GetUserEmailAddress(), UserManager.GetUserID());
         			
         			// Navigate to LoggedOnView.
 					//UI.getCurrent().getNavigator().navigateTo(Constants.URL_LOGGED_ON);

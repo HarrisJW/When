@@ -167,6 +167,8 @@ public class DatabaseConnector extends MySQLProvider {
 	@Override
 	public long GetUserID(String email) {
 		ArrayList<Object[]> r = ExecuteStoredProcedureRead(connection, "getUserID", new Object[] { email });
+		if (r.size() == 0)
+			return -1;
 		Object[] o = r.get(0);
 		return (int)o[0];
 	}

@@ -36,28 +36,39 @@ public final class UserManager {
 		return UI.getCurrent().getSession().getAttribute("credential") != null;
 	}
 	
-	public static String GetUserEmailAddress()
+	private static Person GetGooglePersonInfo()
 	{
 		GoogleCredential credential = (GoogleCredential) UI.getCurrent().getSession().getAttribute("credential");
 		Plus plus = null;
 		
-		try {
+		try 
+		{
 			plus = new Plus.Builder(GoogleNetHttpTransport.newTrustedTransport(), JacksonFactory.getDefaultInstance(), credential).setApplicationName("When").build();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
 		
-		if (plus!=null) {
-			try {
-				Person profile = plus.people().get("me").execute();
-				return profile.getEmails().toString();
-			} 
-			catch (IOException e) {
-				e.printStackTrace();
+			if (plus != null) 
+			{
+				return plus.people().get("me").execute();
 			}
 		}
-		
-		return "";
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static String GetUserEmailAddress()
+	{
+		return GetGooglePersonInfo().getEmails().toString();
+	}
+	
+	public static String GetUserDisplayName()
+	{
+		return GetGooglePersonInfo().getDisplayName().toString();
+	}
+	
+	public static String GetUserID()
+	{
+		return GetGooglePersonInfo().getId().toString();
 	}
 }
