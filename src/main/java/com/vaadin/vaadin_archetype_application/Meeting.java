@@ -47,7 +47,7 @@ public class Meeting {
 		return String.valueOf(membersCount);
 	}
 	
-	public String getState()
+	public String getStatus()
 	{
 		return state.toString();
 	}

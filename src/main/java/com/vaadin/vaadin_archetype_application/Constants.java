@@ -16,6 +16,6 @@ public final class Constants {
 	public static final String URL_INDIVIDUAL_MEETING = "individual-meeting";
 	
 	//Return codes
-	public static final int CODE_INVALID_MEETING_ID_PASSWORD = 1;
+	public static final int CODE_INVALID_MEETING_ID_PASSWORD = -1;
 	public static final int CODE_MEETING_ID_EMPTY = 2;
 }

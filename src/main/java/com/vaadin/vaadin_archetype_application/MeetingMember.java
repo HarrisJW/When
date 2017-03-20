@@ -14,6 +14,16 @@ public class MeetingMember {
 	public String firstName, lastName;
 	public UserAccess access;
 	
+	public String getName()
+	{
+		return firstName + " " + lastName;
+	}
+	
+	public String getStatus()
+	{
+		return access.toString();
+	}
+	
 	public void SetAccess(int a)
 	{
 		if (a == 0)

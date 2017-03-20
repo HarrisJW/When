@@ -8,7 +8,9 @@ import java.util.List;
 
 import com.google.api.services.plus.model.Person;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.event.SelectionEvent;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
@@ -28,29 +30,9 @@ public class AllMeetingsView extends ILoggedInView {
 		VerticalLayout layout = new VerticalLayout();
 		layout.setSpacing(true);
 		layout.setMargin(true);
-
-		// Get reference to active user so that we can get their meetings.
-		Plus plus = null;
-		credential = (GoogleCredential) UI.getCurrent().getSession().getAttribute("credential");
-		try {
-			plus = new Plus.Builder(GoogleNetHttpTransport.newTrustedTransport(), JacksonFactory.getDefaultInstance(), credential).setApplicationName("When").build();
-		} catch (GeneralSecurityException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		// Get a reference to current user's profile.
-		Person profile = null;
-		try {
-			profile = plus.people().get("me").execute();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		
 		// As per example at:
 		// https://vaadin.com/framework
-		
 		List<Meeting> meetingList = Controllers.DatabaseConnector.GetMeetingsList(Controllers.UserID);
 
 		Grid grid = new Grid();
@@ -63,21 +45,22 @@ public class AllMeetingsView extends ILoggedInView {
             // First we add the item
             container.addItem(meeting);
         }
-		
-		// container.addItem(meetingList);
 		grid.setContainerDataSource(container);
-		
-		// Create a Grid and bind the Meeting objects to it
-		// grid.setItems(meetingList);
-	
-		// Define the columns to be displayed
-	
-		//grid.setColumns("ID", "name", "state");
-		//grid.setColumnOrder("ID", "name");
-		
+		grid.setSelectionMode(SelectionMode.SINGLE);
+		grid.addSelectionListener(e -> ItemSelected(e));
 		layout.addComponent(grid);
 		
 		setContent(layout);
+	}
+	
+	private void ItemSelected(SelectionEvent e)
+	{
+		Object[] o = e.getSelected().toArray();
+		if (o.length == 0)
+			return;
+
+		UI.getCurrent().getSession().setAttribute("selectedMeeting", (Meeting)o[0]);
+		UI.getCurrent().getNavigator().navigateTo(Constants.URL_MEETING_OVERVIEW);
 	}
 	
 	@Override

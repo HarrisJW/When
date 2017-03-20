@@ -1,2 +1,4 @@
 User-friendly 404 and 500 pages
 Replace LoggedOnView with something more user-friendly
+
+Meetings you have joined are not displayed in all-meetings

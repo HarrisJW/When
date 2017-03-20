@@ -63,6 +63,9 @@ public class DatabaseConnectorTest {
 		assertEquals(1, md1.membersCount);
 		assertEquals(1, md1.members.size());
 		
+		System.out.println(md1.code);
+		System.out.println(md2.code);
+		
 		//Join meetings
 		assertNotSame(0, dbc.TryJoinMeeting(md2.code, "", uid1));
 		assertEquals(0, dbc.TryJoinMeeting(md2.code, "asdf", uid1));

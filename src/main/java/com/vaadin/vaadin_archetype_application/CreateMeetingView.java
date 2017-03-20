@@ -2,6 +2,8 @@ package com.vaadin.vaadin_archetype_application;
 
 import java.util.Date;
 
+import org.bouncycastle.asn1.x509.TBSCertList;
+
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
@@ -20,7 +22,7 @@ public class CreateMeetingView extends ILoggedInView {
 	//private TextField tbMeetingParticipantEmailAddresses;
 	private DateField tbMeetingStartDate;
 	private DateField tbMeetingEndDate;
-	private DateField tbMeetingDuration;
+	private TextField tbMeetingDuration;
 	private PasswordField tbMeetingPassword;
 	private PasswordField tbConfirmMeetingPassword;
 	private Label lErrorMessage;
@@ -43,7 +45,7 @@ public class CreateMeetingView extends ILoggedInView {
 		tbMeetingName = new TextField();
 		tbMeetingStartDate = new DateField();
 		tbMeetingEndDate = new DateField();
-		tbMeetingDuration = new DateField();
+		tbMeetingDuration = new TextField();
 		//tbMeetingCreatorEmailAddress = new TextField();
 		//tbMeetingParticipantEmailAddresses = new TextField();
 		tbMeetingPassword = new PasswordField();
@@ -72,19 +74,13 @@ public class CreateMeetingView extends ILoggedInView {
 		gl.addComponent(new Label("Confirm meeting Password: "), 0, row);
 		gl.addComponent(tbConfirmMeetingPassword, 1, row++);
 		
-		//gl.addComponent(new Label("Meeting creator email address: "), 0, 3);
-		//gl.addComponent(tbMeetingCreatorEmailAddress, 1, 3);
-		
-		//gl.addComponent(new Label("Meeting participant email addresses: "), 0, 4);
-		//gl.addComponent(tbMeetingParticipantEmailAddresses, 1, 4);
-		
 		gl.addComponent(new Label("Meeting start date: "), 0, row);
 		gl.addComponent(tbMeetingStartDate, 1, row++);
 		
 		gl.addComponent(new Label("Meeting end date: "), 0, row);
 		gl.addComponent(tbMeetingEndDate, 1, row++);
 		
-		gl.addComponent(new Label("Meeting duration: "), 0, row);
+		gl.addComponent(new Label("Meeting duration (minutes): "), 0, row);
 		gl.addComponent(tbMeetingDuration, 1, row++);
 		
 		layout.addComponent(gl);
@@ -109,42 +105,46 @@ public class CreateMeetingView extends ILoggedInView {
 		// String password, Date startDate, Date endDate, String name, Date duration, long userID
 		// Update text entry fields to reflect same.
 		
-		if(tbMeetingPassword.getValue() != tbConfirmMeetingPassword.getValue()){
+		if(tbMeetingPassword.getValue() != tbConfirmMeetingPassword.getValue())
+		{
 			setErrorMessage("Passwords must match!");
-			return;
-			
+			return;	
 		}
 		
-		System.out.println(UserManager.GetUserEmailAddress());
+		long duration;
+		try
+		{
+			duration = new Long(tbMeetingDuration.getValue()) * 60 * 1000;
+		}
+		catch (Exception e)
+		{
+			setErrorMessage("Duration must be a number");
+			return;
+		}
+		if (duration <= 0)
+		{
+			setErrorMessage("Duration must be a positive number");
+			return;
+		}
 		
 		int code = (int) Controllers.DatabaseConnector.CreateMeeting(tbMeetingPassword.getValue(), 
 				tbMeetingStartDate.getValue(), tbMeetingEndDate.getValue(),
 				tbMeetingName.getValue(),
-				tbMeetingDuration.getValue(),
+				new Date(duration),
 				Controllers.UserID);
 		
-		switch (code) {
-		
-		case 0:
-			
+		if (code > 0)
+		{
+			Meeting m = Controllers.DatabaseConnector.GetMeetingDescription(code);
+			UI.getCurrent().getSession().setAttribute("selectedMeeting", m);
 			UI.getCurrent().getNavigator().navigateTo(Constants.URL_MEETING_OVERVIEW);	
-			
-			break;
-
-/*		case Constants.CODE_INVALID_MEETING_ID_PASSWORD:
-			setErrorMessage("Invalid ID / Password combination");
-			break;
-
-		case Constants.CODE_MEETING_ID_EMPTY:
-			setErrorMessage("Meeting ID can't be empty");
-			break;
-			
-		default:
-			setErrorMessage("Unknown behavior");
-			break;*/
-		}	
-		
-		
+		}
+		else
+		{
+			setErrorMessage("Error creating meeting");
+			System.out.println("Can't create meeting. Error code " + code);
+			return;
+		}
 	}
 	
 	//Display error message in red
