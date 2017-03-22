@@ -2,9 +2,6 @@ package com.vaadin.vaadin_archetype_application;
 
 import java.util.Date;
 
-import org.bouncycastle.asn1.x509.TBSCertList;
-
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.DateField;
