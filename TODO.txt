@@ -1,4 +1,5 @@
 User-friendly 404 and 500 pages
 Replace LoggedOnView with something more user-friendly
+FIX MEETING DURATION
 
 Meetings you have joined are not displayed in all-meetings
