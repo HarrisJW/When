@@ -10,3 +10,5 @@ deploy:
   app: when-app
   on:
     repo: HarrisJW/When
+env:
+- secure: d5e0d7b5-01d5-4098-bf5d-95550c9f2360
