@@ -28,12 +28,18 @@ public class MeetingOverviewView extends ILoggedInView {
 		layout.setSpacing(true);
 		layout.setMargin(true);
 		
-		GridLayout gl = new GridLayout(2, 5);//Grid layout for text fields
+		GridLayout gl = new GridLayout(2, 7);//Grid layout for text fields
 		gl.setSpacing(true);
 		int row = 0;
 		
 		gl.addComponent(new Label("Title"), 0, row);
 		gl.addComponent(new Label(meeting.name), 1, row++);
+		
+		gl.addComponent(new Label("ID"), 0, row);
+		gl.addComponent(new Label(meeting.code), 1, row++);
+		
+		gl.addComponent(new Label("Password"), 0, row);
+		gl.addComponent(new Label(meeting.password), 1, row++);
 		
 		gl.addComponent(new Label("Meeting start date"), 0, row);
 		String s = meeting.startDate.toString();
@@ -44,7 +50,7 @@ public class MeetingOverviewView extends ILoggedInView {
 		gl.addComponent(new Label(s.substring(0, s.indexOf(" "))), 1, row++);
 		
 		gl.addComponent(new Label("Meeting duration"), 0, row);
-		gl.addComponent(new Label(String.valueOf(meeting.duration.getTime() / 1000 / 60 / (-20)) + " minutes"), 1, row++);
+		gl.addComponent(new Label(String.valueOf(meeting.duration / 60) + " minutes"), 1, row++);
 		
 		gl.addComponent(new Label("Status"), 0, row);
 		gl.addComponent(new Label(meeting.getStatus()), 1, row++);

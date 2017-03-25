@@ -15,8 +15,10 @@ public class Meeting {
 	
 	public long ID;
 	public String code;
+	public String password;
 	public String name;
-	public Date startDate, endDate, duration;
+	public Date startDate, endDate;
+	public long duration;
 	public MeetingState state;
 	public int membersCount;
 	public ArrayList<MeetingMember> members;
@@ -26,7 +28,7 @@ public class Meeting {
 		
 	}
 
-	public Meeting(long ID, String code, String name, Date startDate, Date endDate, Date duration){
+	public Meeting(long ID, String code, String name, Date startDate, Date endDate, long duration){
 		
 		this.ID = ID;
 		this.code = code;

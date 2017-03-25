@@ -25,13 +25,13 @@ public interface DBProvider {
 	
 	//DB stored procedures handlers
 	public int TryJoinMeeting(String meetingCode, String meetingPassword, long userID);
-	public long CreateMeeting(String password, Date startDate, Date endDate, String name, Date duration, long userID);
+	public long CreateMeeting(String password, Date startDate, Date endDate, String name, long duration, long userID);
 	public boolean DeleteMeeting(long meetingID);//Don't call this in prod
 	public Meeting GetMeetingDescription(long meetingID);
 	public ArrayList<Meeting> GetMeetingsList(long userID);
 	public ArrayList<MeetingMember> GetMeetingMembers(long meetingID);
 	public long GetUserID(String email);
-	public boolean UpdateMeetingTime(long meetingID, Date startDate, Date endDate, Date duration);
+	public boolean UpdateMeetingTime(long meetingID, Date startDate, Date endDate, long duration);
 	public long CreateUser(String firstName, String lastName, String email, String googleID);
 	public int LeaveMeeting(long meetingID, long userID);
 }

@@ -45,10 +45,10 @@ public class DatabaseConnectorTest {
 		
 		//Create meetings
 		Date d = new Date();
-		long mid1 = dbc.CreateMeeting("", d, d, "m1", new Date(1000*60*60*2), uid1);
+		long mid1 = dbc.CreateMeeting("", d, d, "m1", 60*60*2, uid1);
 		assertNotSame(-1, mid1);
 		
-		long mid2 = dbc.CreateMeeting("asdf", d, d, "m2", new Date(1000*60*60*3), uid2);
+		long mid2 = dbc.CreateMeeting("asdf", d, d, "m2", 60*60*3, uid2);
 		assertNotSame(-1, mid2);
 		
 		System.out.println(uid1);
@@ -62,6 +62,8 @@ public class DatabaseConnectorTest {
 		assertEquals(MeetingState.Setup, md1.state);
 		assertEquals(1, md1.membersCount);
 		assertEquals(1, md1.members.size());
+		assertEquals(60*60*2, md1.duration);
+		assertEquals("", md1.password);
 		
 		System.out.println(md1.code);
 		System.out.println(md2.code);
@@ -100,7 +102,7 @@ public class DatabaseConnectorTest {
 		
 		//Update meeting information
 		Date d2 = new Date();
-		assertEquals(true, dbc.UpdateMeetingTime(mid1, d2, d2, new Date(1000)));
+		assertEquals(true, dbc.UpdateMeetingTime(mid1, d2, d2, 1000));
 		md1 = dbc.GetMeetingDescription(mid1);
 		assertEquals(mid1, md1.ID);
 		assertEquals("m1", md1.name);

@@ -1,5 +1,6 @@
 package com.vaadin.vaadin_archetype_application;
 
+import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -82,7 +83,7 @@ public class DatabaseConnector extends MySQLProvider {
 
 	//Creates meeting. Returns SQL return code
 	@Override
-	public long CreateMeeting(String password, Date startDate, Date endDate, String name, Date duration, long userID) {
+	public long CreateMeeting(String password, Date startDate, Date endDate, String name, long duration, long userID) {
 		ArrayList<Object[]> r = ExecuteStoredProcedureRead(connection, "createMeeting", new Object[] { password, startDate,
 				endDate, name, duration, userID });
 		Object[] o = r.get(0);
@@ -98,7 +99,7 @@ public class DatabaseConnector extends MySQLProvider {
 	//Returns populated Meeting instance along with meeting members
 	@Override
 	public Meeting GetMeetingDescription(long meetingID) {
-		ArrayList<Object[]> r = ExecuteStoredProcedureRead(connection, "getFullMeetingDescription", new Object[] { meetingID });
+		ArrayList<Object[]> r = ExecuteStoredProcedureRead(connection, "getMeetingDescription", new Object[] { meetingID });
 		if (r.size() == 0 || r.get(0) == null || r.get(0)[0] == null)
 			return null;
 		Object[] o = r.get(0);
@@ -108,11 +109,12 @@ public class DatabaseConnector extends MySQLProvider {
 		meeting.name = (String)o[0];
 		meeting.startDate = (Date)o[1];
 		meeting.endDate = (Date)o[2];
-		meeting.duration = (Date)o[3];
+		meeting.duration = (long)o[3];
 		meeting.SetState((int)o[4]);
 		meeting.code = (String)o[5];
-		meeting.membersCount = (int)(long)o[6];
+		meeting.password = (String)o[6];
 		meeting.members = GetMeetingMembers(meetingID);
+		meeting.membersCount = meeting.members.size();
 		
 		return meeting;
 	}
@@ -131,10 +133,11 @@ public class DatabaseConnector extends MySQLProvider {
 			meeting.name = (String)o[1];
 			meeting.startDate = (Date)o[2];
 			meeting.endDate = (Date)o[3];
-			meeting.duration = (Date)o[4];
+			meeting.duration = (long)o[4];
 			meeting.SetState((int)o[5]);
 			meeting.code = (String)o[6];
 			meeting.membersCount = (int)(long)o[7];
+			meeting.password = (String)o[8];
 			meeting.members = GetMeetingMembers(meeting.ID);
 			meetingDescriptions.add(meeting);
 		}
@@ -173,7 +176,7 @@ public class DatabaseConnector extends MySQLProvider {
 
 	//Updates meeting parameters
 	@Override
-	public boolean UpdateMeetingTime(long meetingID, Date startDate, Date endDate, Date duration) {
+	public boolean UpdateMeetingTime(long meetingID, Date startDate, Date endDate, long duration) {
 		ArrayList<Object[]> r = ExecuteStoredProcedureRead(connection, "updateMeetingTime", new Object[] { meetingID, startDate,
 				endDate, duration });
 		return true;

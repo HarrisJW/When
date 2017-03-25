@@ -111,7 +111,7 @@ public class CreateMeetingView extends ILoggedInView {
 		long duration;
 		try
 		{
-			duration = new Long(tbMeetingDuration.getValue()) * 60 * 1000;
+			duration = new Long(tbMeetingDuration.getValue()) * 60;
 		}
 		catch (Exception e)
 		{
@@ -127,7 +127,7 @@ public class CreateMeetingView extends ILoggedInView {
 		int code = (int) Controllers.DatabaseConnector.CreateMeeting(tbMeetingPassword.getValue(), 
 				tbMeetingStartDate.getValue(), tbMeetingEndDate.getValue(),
 				tbMeetingName.getValue(),
-				new Date(duration),
+				duration,
 				Controllers.UserID);
 		
 		if (code > 0)
