@@ -177,8 +177,7 @@ public class DatabaseConnector extends MySQLProvider {
 	//Updates meeting parameters
 	@Override
 	public boolean UpdateMeetingTime(long meetingID, Date startDate, Date endDate, long duration) {
-		ArrayList<Object[]> r = ExecuteStoredProcedureRead(connection, "updateMeetingTime", new Object[] { meetingID, startDate,
-				endDate, duration });
+		ExecuteStoredProcedureRead(connection, "updateMeetingTime", new Object[] { meetingID, startDate, endDate, duration });
 		return true;
 	}
 
@@ -191,11 +190,178 @@ public class DatabaseConnector extends MySQLProvider {
 	}
 	
 	//Leaves user from a meeting
+	@Override
 	public int LeaveMeeting(long meetingID, long userID) {
 		ArrayList<Object[]> r = ExecuteStoredProcedureRead(connection, "leaveMeeting", new Object[] { userID, meetingID });
 		Object[] o = r.get(0);
 		return (int)(long)o[0];
 		
+	}
+
+	@Override
+	public boolean SetMeetingState(long meetingID, int state)
+	{
+		return ExecuteStoredProcedure(connection, "setMeetingState", new Object[] { meetingID, state });
+	}
+	
+	
+
+	@Override
+	public TimeRange[] GetAvailableTimeRanges(long meetingID) {
+		ArrayList<Object[]> r = ExecuteStoredProcedureRead(connection, "getAvailableTimeRanges", new Object[] { meetingID });
+		
+		TimeRange[] result = new TimeRange[r.size()];
+		Object[] o;
+		TimeRange t;
+		
+		for (int i = 0; i < result.length; i++)
+		{
+			t = result[i] = new TimeRange();
+			o = r.get(i);
+			t.id = (int)o[0];
+			t.startTime = (Date)o[1];
+			t.endTime = (Date)o[2];
+		}
+		
+		return result;
+	}
+
+	@Override
+	public TimeRange[] GetUserTimeRanges(long meetingID, long userID) {
+		ArrayList<Object[]> r = ExecuteStoredProcedureRead(connection, "getUserTimeRanges", new Object[] { meetingID, userID });
+		
+		TimeRange[] result = new TimeRange[r.size()];
+		Object[] o;
+		TimeRange t;
+		
+		for (int i = 0; i < result.length; i++)
+		{
+			t = result[i] = new TimeRange();
+			o = r.get(i);
+			t.id = (int)o[0];
+			t.startTime = (Date)o[1];
+			t.endTime = (Date)o[2];
+		}
+		
+		return result;
+	}
+
+	@Override
+	public TimeRange[] GetMeetingTimeRanges(long meetingID) {
+		ArrayList<Object[]> r = ExecuteStoredProcedureRead(connection, "getMeetingTimeRanges", new Object[] { meetingID });
+		if (r.size() == 0 || r.get(0) == null || r.get(0)[0] == null)
+			return null;
+		
+		TimeRange[] result = new TimeRange[r.size()];
+		Object[] o;
+		TimeRange t;
+		
+		for (int i = 0; i < result.length; i++)
+		{
+			t = result[i] = new TimeRange();
+			o = r.get(i);
+			t.id = (int)o[0];
+			t.startTime = (Date)o[1];
+			t.endTime = (Date)o[2];
+		}
+		
+		return result;
+	}
+
+	@Override
+	public long AddUserTimeRange(long meetingID, long userID, Date start, Date end) {
+		ArrayList<Object[]> r = ExecuteStoredProcedureRead(connection, "addUserTimeRange", new Object[] { meetingID, userID, start, end });
+		return ((BigInteger)r.get(0)[0]).longValue();
+	}
+
+	@Override
+	public boolean DeleteUserTimeRange(long rid) {
+		return ExecuteStoredProcedure(connection, "deleteUserTimeRange", new Object[] { rid });
+	}
+
+	@Override
+	public boolean ClearMeetingTimeRanges(long meetingID) {
+		return ExecuteStoredProcedure(connection, "clearMeetingTimeRanges", new Object[] { meetingID });
+	}
+
+	@Override
+	public boolean AddAvailableTimeRange(long meetingID, Date startDate, Date endDate)
+	{
+		return ExecuteStoredProcedure(connection, "addAvailableTimeRange", new Object[] { meetingID, startDate, endDate });
+	}
+	
+	
+
+	@Override
+	public TimeSlot[] GetAvailableTimeSlots(long meetingID) {
+		ArrayList<Object[]> r = ExecuteStoredProcedureRead(connection, "getAvailableTimeSlots", new Object[] { meetingID });
+		
+		TimeSlot[] result = new TimeSlot[r.size()];
+		Object[] o;
+		TimeSlot t;
+		
+		for (int i = 0; i < result.length; i++)
+		{
+			t = result[i] = new TimeSlot();
+			o = r.get(i);
+			t.id = (int)o[0];
+			t.startTime = (Date)o[1];
+			t.endTime = (Date)o[2];
+			t.votes = GetTimeSlotVotes(t.id);
+		}
+		
+		return result;
+	}
+
+	@Override
+	public boolean AddTimeSlot(long meetingID, Date startDate, Date endDate) {
+		return ExecuteStoredProcedure(connection, "addTimeSlot", new Object[] { meetingID, startDate, endDate });
+	}
+
+	@Override
+	public boolean ClearMeetingTimeSlots(long meetingID) {
+		return ExecuteStoredProcedure(connection, "clearMeetingTimeSlots", new Object[] { meetingID });
+	}
+	
+	
+
+	@Override
+	public TimeSlotVote[] GetTimeSlotVotes(long slotID) {
+		ArrayList<Object[]> r = ExecuteStoredProcedureRead(connection, "getTimeSlotVotes", new Object[] { slotID });
+		
+		TimeSlotVote[] result = new TimeSlotVote[r.size()];
+		Object[] o;
+		TimeSlotVote t;
+		
+		for (int i = 0; i < result.length; i++)
+		{
+			t = result[i] = new TimeSlotVote();
+			o = r.get(i);
+			t.userID = (int)o[0];
+			t.SetVote((int)o[1]);
+		}
+		
+		return result;
+	}
+
+	@Override
+	public boolean AddTimeSlotVote(long slotID, long userID, int vote) {
+		return ExecuteStoredProcedure(connection, "addTimeSlotVote", new Object[] { slotID, userID, vote });
+	}
+
+	@Override
+	public boolean RemoveTimeSlotVote(long slotID, long userID) {
+		return ExecuteStoredProcedure(connection, "removeTimeSlotVote", new Object[] { slotID, userID });
+	}
+
+	@Override
+	public boolean UpdateTimeSlotVote(long slotID, long userID, int vote) {
+		return ExecuteStoredProcedure(connection, "updateTimeSlotVote", new Object[] { slotID, userID, vote });
+	}
+
+	@Override
+	public boolean ClearTimeSlotVotes(long slotID) {
+		return ExecuteStoredProcedure(connection, "clearTimeSlotVotes", new Object[] { slotID });
 	}
 	
 	

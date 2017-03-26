@@ -3,15 +3,20 @@ package com.vaadin.vaadin_archetype_application;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.vaadin.vaadin_archetype_application.TimeSlotVote.Vote;
+
 //Data container for meetings
 public class Meeting {
 	
 	public enum MeetingState
 	{
 		Setup,
-		Voting,
+		TimeRangeSelection,
+		TimeSlotVoting,
 		Finalized
 	}
+	
+	
 	
 	public long ID;
 	public String code;
@@ -56,11 +61,12 @@ public class Meeting {
 	
 	public void SetState(int s)
 	{
-		if (s == 0)
-			state = MeetingState.Setup;
-		else if (s == 1)
-			state = MeetingState.Voting;
-		else
-			state = MeetingState.Finalized;
+		MeetingState[] sa = MeetingState.values();
+		for (int i = 0; i < sa.length; i++)
+			if (sa[i].ordinal() == s)
+			{
+				state = sa[i];
+				return;
+			}
 	}
 }

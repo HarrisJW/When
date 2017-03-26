@@ -34,4 +34,23 @@ public interface DBProvider {
 	public boolean UpdateMeetingTime(long meetingID, Date startDate, Date endDate, long duration);
 	public long CreateUser(String firstName, String lastName, String email, String googleID);
 	public int LeaveMeeting(long meetingID, long userID);
+	public boolean SetMeetingState(long meetingID, int state);
+	
+	public TimeRange[] GetAvailableTimeRanges(long meetingID);
+	public TimeRange[] GetUserTimeRanges(long meetingID, long userID);
+	public TimeRange[] GetMeetingTimeRanges(long meetingID);
+	public long AddUserTimeRange(long meetingID, long userID, Date start, Date end);
+	public boolean DeleteUserTimeRange(long rid);
+	public boolean ClearMeetingTimeRanges(long meetingID);
+	public boolean AddAvailableTimeRange(long meetingID, Date startDate, Date endDate);
+	
+	public TimeSlot[] GetAvailableTimeSlots(long meetingID);
+	public boolean AddTimeSlot(long meetingID, Date startDate, Date endDate);
+	public boolean ClearMeetingTimeSlots(long meetingID);
+	
+	public TimeSlotVote[] GetTimeSlotVotes(long slotID);
+	public boolean AddTimeSlotVote(long slotID, long userID, int vote);
+	public boolean RemoveTimeSlotVote(long slotID, long userID);
+	public boolean UpdateTimeSlotVote(long slotID, long userID, int vote);
+	public boolean ClearTimeSlotVotes(long slotID);
 }

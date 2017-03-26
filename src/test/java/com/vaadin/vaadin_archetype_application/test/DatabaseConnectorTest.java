@@ -13,9 +13,13 @@ import com.vaadin.vaadin_archetype_application.Meeting;
 import com.vaadin.vaadin_archetype_application.Meeting.MeetingState;
 import com.vaadin.vaadin_archetype_application.MeetingMember;
 import com.vaadin.vaadin_archetype_application.MeetingMember.UserAccess;
+import com.vaadin.vaadin_archetype_application.TimeRange;
+import com.vaadin.vaadin_archetype_application.TimeSlot;
+import com.vaadin.vaadin_archetype_application.TimeSlotVote;
 
 public class DatabaseConnectorTest {
 	
+	//*
 	@Test
 	public void tryOpenConnection()
 	{
@@ -28,6 +32,7 @@ public class DatabaseConnectorTest {
 	@Test
 	public void UselessAnnoyingTest()
 	{
+		//TODO delete everything if a test fails
 		DBProvider dbc = new DatabaseConnector();
 		dbc.Initialize();
 		
@@ -44,11 +49,11 @@ public class DatabaseConnectorTest {
 		assertEquals(uid2, dbc.GetUserID("2asdf@qwer.ty"));
 		
 		//Create meetings
-		Date d = new Date();
-		long mid1 = dbc.CreateMeeting("", d, d, "m1", 60*60*2, uid1);
+		Date d1 = new Date();
+		long mid1 = dbc.CreateMeeting("", d1, d1, "m1", 60*60*2, uid1);
 		assertNotSame(-1, mid1);
 		
-		long mid2 = dbc.CreateMeeting("asdf", d, d, "m2", 60*60*3, uid2);
+		long mid2 = dbc.CreateMeeting("asdf", d1, d1, "m2", 60*60*3, uid2);
 		assertNotSame(-1, mid2);
 		
 		System.out.println(uid1);
@@ -108,9 +113,106 @@ public class DatabaseConnectorTest {
 		assertEquals("m1", md1.name);
 		assertEquals(MeetingState.Setup, md1.state);
 		
+		//Meeting state update
+		assertEquals(true, dbc.SetMeetingState(mid1, Meeting.MeetingState.TimeRangeSelection.ordinal()));
+		md1 = dbc.GetMeetingDescription(mid1);
+		assertEquals(Meeting.MeetingState.TimeRangeSelection, md1.state);
 		
-		//TODO check meeting state change, voting
-		//TODO delete everything if a test fails
+		
+		
+		//Add time ranges
+		assertEquals(true, dbc.AddAvailableTimeRange(mid1, d1, d2));
+		assertEquals(true, dbc.AddAvailableTimeRange(mid1, d2, d1));
+		
+		//Get available time ranges
+		TimeRange[] tra = dbc.GetAvailableTimeRanges(mid1);
+		assertEquals(2, tra.length);
+		
+		//Add user time range
+		long rid;
+		assertNotSame(0, rid = dbc.AddUserTimeRange(mid1, uid1, d1, d2));
+		
+		//Get user time ranges
+		tra = dbc.GetUserTimeRanges(mid1, uid1);
+		assertEquals(1, tra.length);
+		assertEquals(rid, tra[0].id);
+		
+		//Get meeting time ranges
+		tra = dbc.GetMeetingTimeRanges(mid1);
+		assertEquals(1, tra.length);
+		assertEquals(rid, tra[0].id);
+		
+		//Delete user time range
+		dbc.DeleteUserTimeRange(rid);
+		tra = dbc.GetUserTimeRanges(mid1, uid1);
+		assertEquals(0, tra.length);
+		
+		//Clear meeting time ranges
+		assertEquals(true, dbc.ClearMeetingTimeRanges(mid1));
+		tra = dbc.GetAvailableTimeRanges(mid1);
+		assertEquals(0, tra.length);
+		
+		
+
+		assertEquals(true, dbc.SetMeetingState(mid1, Meeting.MeetingState.TimeSlotVoting.ordinal()));
+		md1 = dbc.GetMeetingDescription(mid1);
+		assertEquals(Meeting.MeetingState.TimeSlotVoting, md1.state);
+		
+		//Add time slot
+		assertEquals(true, dbc.AddTimeSlot(mid1, d1, d2));
+		assertEquals(true, dbc.AddTimeSlot(mid1, d2, d1));
+		
+		//Get available time slots
+		TimeSlot[] tsa = dbc.GetAvailableTimeSlots(mid1);
+		assertEquals(2, tsa.length);
+		assertEquals(0, tsa[0].votes.length);
+		assertEquals(0, tsa[1].votes.length);
+		
+		//Add time slot vote
+		assertEquals(true, dbc.AddTimeSlotVote(tsa[0].id, uid1, TimeSlotVote.Vote.Upvote.ordinal()));
+		assertEquals(true, dbc.AddTimeSlotVote(tsa[0].id, uid2, TimeSlotVote.Vote.Downvote.ordinal()));
+		
+		//Get time slot votes
+		TimeSlotVote[] tsva = dbc.GetTimeSlotVotes(tsa[0].id);
+		assertEquals(2, tsva.length);
+		assertEquals(tsva[0].userID, uid1);
+		assertEquals(tsva[1].userID, uid2);
+		assertEquals(tsva[0].vote, TimeSlotVote.Vote.Upvote);
+		assertEquals(tsva[1].vote, TimeSlotVote.Vote.Downvote);
+		
+		//Update time slot vote
+		assertEquals(true, dbc.UpdateTimeSlotVote(tsa[0].id, uid1, TimeSlotVote.Vote.Veto.ordinal()));
+		tsva = dbc.GetTimeSlotVotes(tsa[0].id);
+		assertEquals(2, tsva.length);
+		assertEquals(tsva[0].userID, uid1);
+		assertEquals(tsva[1].userID, uid2);
+		assertEquals(tsva[0].vote, TimeSlotVote.Vote.Veto);
+		assertEquals(tsva[1].vote, TimeSlotVote.Vote.Downvote);
+		
+		//Remove time slot vote
+		assertEquals(true, dbc.RemoveTimeSlotVote(tsa[0].id, uid2));
+		tsva = dbc.GetTimeSlotVotes(tsa[0].id);
+		assertEquals(1, tsva.length);
+		assertEquals(tsva[0].userID, uid1);
+		assertEquals(tsva[0].vote, TimeSlotVote.Vote.Veto);
+		
+		//Clear time slot votes
+		assertEquals(true, dbc.ClearTimeSlotVotes(tsa[0].id));
+		tsva = dbc.GetTimeSlotVotes(tsa[0].id);
+		assertEquals(0, tsva.length);
+		
+		//Clear meeting time slots
+		assertEquals(true, dbc.ClearMeetingTimeSlots(mid1));
+		tsa = dbc.GetAvailableTimeSlots(mid1);
+		assertEquals(0, tsa.length);
+
+		
+		
+		assertEquals(true, dbc.SetMeetingState(mid1, Meeting.MeetingState.Finalized.ordinal()));
+		md1 = dbc.GetMeetingDescription(mid1);
+		assertEquals(Meeting.MeetingState.Finalized, md1.state);
+
+		
 		
 		//Leave meetings
 		System.out.println("asdf");
@@ -128,5 +230,6 @@ public class DatabaseConnectorTest {
 		
 		dbc.Dispose();
 	}
+//*/
 
 }
