@@ -14,8 +14,13 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 public class EmailNotifier {
-	public static void sendCreationMail(String email, String meetingName) {    
-		String text = "You have been invited to meeting " + meetingName;
+	public static void sendCreationMail(String email, String meetingName, String meetingCode, String meetingPass) {    
+		String text = "You have been invited to meeting '" + meetingName +"'\n"
+				+ "Unique meeting code: " + meetingCode;
+		if (meetingPass.equals(""))
+			text += "\nThere is no meeting password. Leave this field empty.";
+		else
+			text += "Meeting password: " + meetingPass;
 		Mailer.send("whenapp3130@gmail.com","csci3130",email,"WHEN Meeting Notification",text);
 	} 
 }
