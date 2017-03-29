@@ -18,8 +18,8 @@ public final class UserManager {
 	//Returns false and redirects user to login page if user's not logged in
 	public static boolean AssureLogin(String targetView)
 	{
-		if (IsLoggedIn())
-		//if (true)
+		//if (IsLoggedIn())
+		if (true)
 			return true;
 		else
 		{

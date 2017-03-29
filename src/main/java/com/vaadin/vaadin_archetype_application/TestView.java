@@ -100,8 +100,25 @@ public class TestView extends Panel implements View {
 				UI.getCurrent().getNavigator().navigateTo(Constants.URL_ALL_MEETINGS);
 			}
 		});
-		
+
 		layout.addComponent(bViewAllMeetings);
+		
+		//*****************************************************************************
+		// Time slot vote button.
+		//*****************************************************************************
+		
+		Button b = new Button("Time slot vote");
+		b.setId("TimeSlotVote");
+		b.addClickListener(new ClickListener() {
+			
+			// Join meeting button click handler. Communicates with DB and changes state according to the return code
+			@Override
+			public void buttonClick(ClickEvent event) {
+				UI.getCurrent().getNavigator().navigateTo(Constants.URL_TIME_RANGE_SELECT);
+			}
+		});
+		
+		layout.addComponent(b);
 		
 		setContent(layout);
 	}

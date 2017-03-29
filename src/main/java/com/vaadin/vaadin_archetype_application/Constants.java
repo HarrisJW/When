@@ -14,6 +14,7 @@ public final class Constants {
 	public static final String URL_CREATE_MEETING = "create-meeting";
 	public static final String URL_ALL_MEETINGS = "all-meetings";
 	public static final String URL_INDIVIDUAL_MEETING = "individual-meeting";
+	public static final String URL_TIME_RANGE_SELECT = "time-range-select";
 	
 	//Return codes
 	public static final int CODE_INVALID_MEETING_ID_PASSWORD = -1;

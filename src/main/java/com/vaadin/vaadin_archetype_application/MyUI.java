@@ -45,6 +45,7 @@ public class MyUI extends UI {
     	navigator.addView(Constants.URL_CREATE_MEETING, new CreateMeetingView());
     	navigator.addView(Constants.URL_INDIVIDUAL_MEETING, new IndividualMeetingView());
     	navigator.addView(Constants.URL_ALL_MEETINGS, new AllMeetingsView());
+    	navigator.addView(Constants.URL_TIME_RANGE_SELECT, new TimeRangeSelectionView());
     	
     	Controllers.DatabaseConnector.Initialize();
     }
