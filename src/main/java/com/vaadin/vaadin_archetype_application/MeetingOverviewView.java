@@ -3,16 +3,11 @@ package com.vaadin.vaadin_archetype_application;
 import java.util.List;
 
 import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.vaadin_archetype_application.MeetingMember.UserAccess;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.Grid.SelectionMode;
 
@@ -32,23 +27,6 @@ public class MeetingOverviewView extends ILoggedInView {
 		VerticalLayout layout = new VerticalLayout();
 		layout.setSpacing(true);
 		layout.setMargin(true);
-		
-		TextField emailField = new TextField();
-		emailField.setInputPrompt("Enter users email to invite them...");
-		
-		Button emailButton = new Button("Send Email",
-				new Button.ClickListener() {
-
-					@Override
-					public void buttonClick(ClickEvent event) {
-						Notification.show("Email sent");
-						EmailNotifier.sendCreationMail(emailField.getValue(), meeting.name, 
-								meeting.code, meeting.password);
-						emailField.clear();
-					}
-			
-		});
-	
 		
 		GridLayout gl = new GridLayout(2, 7);//Grid layout for text fields
 		gl.setSpacing(true);
@@ -77,12 +55,6 @@ public class MeetingOverviewView extends ILoggedInView {
 		gl.addComponent(new Label("Status"), 0, row);
 		gl.addComponent(new Label(meeting.getStatus()), 1, row++);
 		
-		for (MeetingMember member : meeting.members) {
-			if (member.ID == Controllers.UserID && member.access.equals(UserAccess.Creator)) {
-				layout.addComponent(emailField);
-				layout.addComponent(emailButton);
-			}
-		}
 		layout.addComponent(gl);
 		
 		layout.addComponent(new Label("Members:"));
