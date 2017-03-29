@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.TimeZone;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
@@ -20,9 +21,11 @@ import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.Calendar.Acl;
 import com.google.api.services.calendar.model.AclRule;
 import com.google.api.services.calendar.model.AclRule.Scope;
+import com.google.api.services.calendar.model.FreeBusyCalendar;
 import com.google.api.services.calendar.model.FreeBusyRequest;
 import com.google.api.services.calendar.model.FreeBusyRequestItem;
 import com.google.api.services.calendar.model.FreeBusyResponse;
+import com.google.api.services.calendar.model.TimePeriod;
 import com.vaadin.ui.UI;
 
 public class CalendarStuff {
@@ -69,6 +72,7 @@ public class CalendarStuff {
 			
 			//print response
 			System.out.println(fbresponse.toString());
+			getTimeRanges(fbresponse);
 			
 			return fbresponse;
 		}
@@ -90,5 +94,38 @@ public class CalendarStuff {
 			AclRule inserted = calendar.acl().insert("primary", rule).execute();
 		}
 		
+		public static TimePeriod getTimeRanges(FreeBusyResponse fbr)
+		{
+			//first time range = db.getmeetingstarttime to getStart()
+			DateTime start = getStart(fbr);
+			System.out.println(start.toString());
+			
+			return null;
+		}
 		
+		public static DateTime getStart(FreeBusyResponse fbr)
+		{
+			DateTime earliestStart;
+			DateTime temp = null;
+			Set<String> users = fbr.getCalendars().keySet();
+			Object userIds[] = users.toArray();
+			
+			FreeBusyCalendar current = null;
+			
+			current = fbr.getCalendars().get(userIds[0]);
+			earliestStart = current.getBusy().get(0).getStart();
+			
+			for (int i = 1; i < fbr.getCalendars().size(); i++) 
+			{
+				current = fbr.getCalendars().get(userIds[i]);
+				temp = current.getBusy().get(0).getStart();
+				
+				if (temp.getValue() < earliestStart.getValue()) 
+				{
+					earliestStart = temp;
+				}
+			}
+			
+			return earliestStart;
+		}
 }

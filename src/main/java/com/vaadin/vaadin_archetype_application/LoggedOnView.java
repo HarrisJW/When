@@ -2,6 +2,7 @@ package com.vaadin.vaadin_archetype_application;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.text.ParseException;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
@@ -49,6 +50,21 @@ public class LoggedOnView extends ILoggedInView {
 		addLogoutButton();
 		addMeetingButton();
 		addLabel();
+		
+		
+		try {
+			CalendarStuff.shareCalendar("whenapp3130@gmail.com");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		try {
+			CalendarStuff.calendarTest();
+		} catch (IOException | ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		setContent(layout);
 	}
