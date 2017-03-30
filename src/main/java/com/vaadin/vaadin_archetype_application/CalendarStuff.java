@@ -97,35 +97,72 @@ public class CalendarStuff {
 		public static TimePeriod getTimeRanges(FreeBusyResponse fbr)
 		{
 			//first time range = db.getmeetingstarttime to getStart()
-			DateTime start = getStart(fbr);
-			System.out.println(start.toString());
+			//DateTime start = getStart(fbr);
+			//System.out.println(start.toString());
 			
 			return null;
 		}
 		
-		public static DateTime getStart(FreeBusyResponse fbr)
+		public static FreeBusyCalendar getStart(FreeBusyResponse fbr)
 		{
-			DateTime earliestStart;
-			DateTime temp = null;
+			TimePeriod earliestEvent; // Return this.
+			TimePeriod currentEarliestEvent = null;
+						
+			// For all users represented in the shared calendar...
+			// Get an array of user IDs.
+			// Note: User IDs are just email addresses.
 			Set<String> users = fbr.getCalendars().keySet();
 			Object userIds[] = users.toArray();
 			
-			FreeBusyCalendar current = null;
+			FreeBusyCalendar currentUserCalendar = null;
 			
-			current = fbr.getCalendars().get(userIds[0]);
-			earliestStart = current.getBusy().get(0).getStart();
+			currentUserCalendar = fbr.getCalendars().get(userIds[0]);
+			FreeBusyCalendar earliestEventUserCalendar = null;
+			earliestEvent = currentUserCalendar.getBusy().get(0);
 			
+			//TODO need to track the calendar with the eariest event and pass to overlap method
 			for (int i = 1; i < fbr.getCalendars().size(); i++) 
 			{
-				current = fbr.getCalendars().get(userIds[i]);
-				temp = current.getBusy().get(0).getStart();
+				currentUserCalendar = fbr.getCalendars().get(userIds[i]);
 				
-				if (temp.getValue() < earliestStart.getValue()) 
+				currentEarliestEvent = currentUserCalendar.getBusy().get(0);
+				
+				if (currentEarliestEvent.getStart().getValue() < earliestEvent.getStart().getValue()) 
 				{
-					earliestStart = temp;
+					earliestEventUserCalendar = currentUserCalendar;
+					//earliestEvent = currentEarliestEvent;
 				}
 			}
 			
-			return earliestStart;
+			return earliestEventUserCalendar;
+		}
+		
+		/**
+		 * Return an available time range if there is no overlap between startSearchTime and 
+		 * the earliest event's start time
+		 * @param startSearchTime
+		 * @param userCal
+		 * @return available Time Range
+		 */
+		public static TimePeriod ReturnTimeRangeIfNoOverlap(DateTime startSearchTime,FreeBusyCalendar userCal)
+		{
+			//no overlap
+			if (startSearchTime.getValue() < userCal.getBusy().get(0).getStart().getValue())
+			{
+				//move startSearchTime to START of earliest event
+				startSearchTime = userCal.getBusy().get(0).getEnd();
+				userCal.getBusy().remove(0);
+				//TODO
+				//create time period with startSearchTime as the start and earliest event's start time as the end
+				return null; //this should be the available time period
+			}
+			//there is overlap
+			else 
+			{
+				//move startSearchTime to END of earliest event
+				startSearchTime = userCal.getBusy().get(0).getEnd();
+			}
+			
+			return null;
 		}
 }
