@@ -1,13 +1,19 @@
 package com.vaadin.vaadin_archetype_application;
 
+import java.util.Date;
 import java.util.List;
 
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.vaadin_archetype_application.MeetingMember.UserAccess;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.Grid.SelectionMode;
 
@@ -32,6 +38,22 @@ public class MeetingOverviewView extends ILoggedInView {
 		gl.setSpacing(true);
 		int row = 0;
 		
+		TextField emailField = new TextField();
+		emailField.setInputPrompt("Enter users email to invite them...");
+
+		Button emailButton = new Button("Send Email",
+				new Button.ClickListener() {
+
+			@Override
+			public void buttonClick(ClickEvent event) {
+				Notification.show("Email sent");
+				EmailNotifier.sendCreationMail(emailField.getValue(), meeting.name, 
+						meeting.code, meeting.password);
+				emailField.clear();
+			}
+
+		});
+
 		gl.addComponent(new Label("Title"), 0, row);
 		gl.addComponent(new Label(meeting.name), 1, row++);
 		
@@ -42,11 +64,11 @@ public class MeetingOverviewView extends ILoggedInView {
 		gl.addComponent(new Label(meeting.password), 1, row++);
 		
 		gl.addComponent(new Label("Meeting start date"), 0, row);
-		String s = meeting.startDate.toString();
+		String s = new Date(meeting.startDate.getValue()).toString();
 		gl.addComponent(new Label(s.substring(0, s.indexOf(" "))), 1, row++);
 		
 		gl.addComponent(new Label("Meeting end date"), 0, row);
-		s = meeting.endDate.toString();
+		s = new Date(meeting.endDate.getValue()).toString();
 		gl.addComponent(new Label(s.substring(0, s.indexOf(" "))), 1, row++);
 		
 		gl.addComponent(new Label("Meeting duration"), 0, row);
@@ -54,6 +76,13 @@ public class MeetingOverviewView extends ILoggedInView {
 		
 		gl.addComponent(new Label("Status"), 0, row);
 		gl.addComponent(new Label(meeting.getStatus()), 1, row++);
+		
+		for (MeetingMember member : meeting.members) {
+			if (member.ID == Controllers.UserID && member.access.equals(UserAccess.Creator)) {
+				layout.addComponent(emailField);
+				layout.addComponent(emailButton);
+			}
+		}
 		
 		layout.addComponent(gl);
 		
