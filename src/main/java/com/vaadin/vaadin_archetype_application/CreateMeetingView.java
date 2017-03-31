@@ -41,7 +41,9 @@ public class CreateMeetingView extends ILoggedInView {
 	{
 		tbMeetingName = new TextField();
 		tbMeetingStartDate = new DateField();
+		tbMeetingStartDate.setResolution(DateField.RESOLUTION_MIN);
 		tbMeetingEndDate = new DateField();
+		tbMeetingEndDate.setResolution(DateField.RESOLUTION_MIN);
 		tbMeetingDuration = new TextField();
 		//tbMeetingCreatorEmailAddress = new TextField();
 		//tbMeetingParticipantEmailAddresses = new TextField();
