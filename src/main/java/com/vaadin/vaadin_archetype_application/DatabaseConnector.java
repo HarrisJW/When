@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.google.api.client.util.DateTime;
+
 //Class responsible for fetching and uploading data to database
 public class DatabaseConnector extends MySQLProvider {
 	
@@ -107,8 +109,8 @@ public class DatabaseConnector extends MySQLProvider {
 		Meeting meeting = new Meeting();
 		meeting.ID = meetingID;
 		meeting.name = (String)o[0];
-		meeting.startDate = (Date)o[1];
-		meeting.endDate = (Date)o[2];
+		meeting.startDate = new DateTime((Date)o[1]);
+		meeting.endDate = new DateTime((Date)o[2]);
 		meeting.duration = (long)o[3];
 		meeting.SetState((int)o[4]);
 		meeting.code = (String)o[5];
@@ -131,8 +133,8 @@ public class DatabaseConnector extends MySQLProvider {
 			Meeting meeting = new Meeting();
 			meeting.ID = (int)o[0];
 			meeting.name = (String)o[1];
-			meeting.startDate = (Date)o[2];
-			meeting.endDate = (Date)o[3];
+			meeting.startDate = new DateTime((Date)o[2]);
+			meeting.endDate = new DateTime((Date)o[3]);
 			meeting.duration = (long)o[4];
 			meeting.SetState((int)o[5]);
 			meeting.code = (String)o[6];
@@ -219,8 +221,8 @@ public class DatabaseConnector extends MySQLProvider {
 			t = result[i] = new TimeRange();
 			o = r.get(i);
 			t.id = (int)o[0];
-			t.startTime = (Date)o[1];
-			t.endTime = (Date)o[2];
+			t.startTime = new DateTime((Date)o[1]);
+			t.endTime = new DateTime((Date)o[2]);
 		}
 		
 		return result;
@@ -239,8 +241,8 @@ public class DatabaseConnector extends MySQLProvider {
 			t = result[i] = new TimeRange();
 			o = r.get(i);
 			t.id = (int)o[0];
-			t.startTime = (Date)o[1];
-			t.endTime = (Date)o[2];
+			t.startTime = new DateTime((Date)o[1]);
+			t.endTime = new DateTime((Date)o[2]);
 		}
 		
 		return result;
@@ -261,8 +263,8 @@ public class DatabaseConnector extends MySQLProvider {
 			t = result[i] = new TimeRange();
 			o = r.get(i);
 			t.id = (int)o[0];
-			t.startTime = (Date)o[1];
-			t.endTime = (Date)o[2];
+			t.startTime = new DateTime((Date)o[1]);
+			t.endTime = new DateTime((Date)o[2]);
 		}
 		
 		return result;
@@ -305,8 +307,8 @@ public class DatabaseConnector extends MySQLProvider {
 			t = result[i] = new TimeSlot();
 			o = r.get(i);
 			t.id = (int)o[0];
-			t.startTime = (Date)o[1];
-			t.endTime = (Date)o[2];
+			t.startTime = new DateTime((Date)o[1]);
+			t.endTime = new DateTime((Date)o[2]);
 			t.votes = GetTimeSlotVotes(t.id);
 		}
 		
