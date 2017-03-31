@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
 
@@ -18,7 +19,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.Calendar;
-import com.google.api.services.calendar.Calendar.Acl;
+//import com.google.api.services.calendar.Calendar.Acl;
 import com.google.api.services.calendar.model.AclRule;
 import com.google.api.services.calendar.model.AclRule.Scope;
 import com.google.api.services.calendar.model.FreeBusyCalendar;
@@ -72,11 +73,16 @@ public class CalendarStuff {
 			
 			//print response
 			System.out.println(fbresponse.toString());
-			getTimeRanges(fbresponse);
+			getAvailableTimeRanges(fbresponse);
 			
 			return fbresponse;
 		}
 		
+		/**
+		 * Allows a logged in user to share their calendar with another user
+		 * @param email email of the user to share with
+		 * @throws IOException
+		 */
 		public static void shareCalendar(String email) throws IOException 
 		{
 			HttpTransport httpTransport = new NetHttpTransport();
@@ -94,25 +100,51 @@ public class CalendarStuff {
 			AclRule inserted = calendar.acl().insert("primary", rule).execute();
 		}
 		
-		public static TimePeriod getTimeRanges(FreeBusyResponse fbr)
+		/**
+		 * Finds available time ranges for all users
+		 * @param fbr The response to the Calendar query i.e. a map that contains busy events
+		 * 			  for all users
+		 * @return a list of free time periods
+		 */
+		public static List<TimePeriod> getAvailableTimeRanges(FreeBusyResponse fbr)
 		{
-			//first time range = db.getmeetingstarttime to getStart()
-			//DateTime start = getStart(fbr);
-			//System.out.println(start.toString());
+			List<TimePeriod> availableTimePeriods = new ArrayList<TimePeriod>();
 			
-			return null;
-		}
-		
-		public static FreeBusyCalendar getStart(FreeBusyResponse fbr)
-		{
-			TimePeriod earliestEvent; // Return this.
-			TimePeriod currentEarliestEvent = null;
-						
 			// For all users represented in the shared calendar...
 			// Get an array of user IDs.
 			// Note: User IDs are just email addresses.
 			Set<String> users = fbr.getCalendars().keySet();
 			Object userIds[] = users.toArray();
+			
+			//fake start and end times for meeting range
+			Date start = new Date();
+			Date end = new Date();
+			
+			DateTime startSearchTime = new DateTime(start);
+			DateTime endSearchTime = new DateTime(end);
+			
+			FreeBusyCalendar calendar;
+			Map<String,FreeBusyCalendar> userCalendars = fbr.getCalendars();
+			while (userCalendars.size() != 0)
+			{
+				calendar = getCalendarWithEarliestEvent(fbr,userIds);
+				TimePeriod timeRange = returnTimeRangeIfEarlier(startSearchTime,calendar);
+				if (timeRange != null)
+				{
+					availableTimePeriods.add(timeRange);
+				}
+				
+			}
+			availableTimePeriods.add(returnTimeRangeIfNoEvents(endSearchTime,startSearchTime));
+			
+			return availableTimePeriods;
+		}
+		
+		//finds the earliest starting event
+		public static FreeBusyCalendar getCalendarWithEarliestEvent(FreeBusyResponse fbr,Object userIds[])
+		{
+			TimePeriod earliestEvent; 
+			TimePeriod currentEarliestEvent = null;
 			
 			FreeBusyCalendar currentUserCalendar = null;
 			
@@ -120,7 +152,6 @@ public class CalendarStuff {
 			FreeBusyCalendar earliestEventUserCalendar = null;
 			earliestEvent = currentUserCalendar.getBusy().get(0);
 			
-			//TODO need to track the calendar with the eariest event and pass to overlap method
 			for (int i = 1; i < fbr.getCalendars().size(); i++) 
 			{
 				currentUserCalendar = fbr.getCalendars().get(userIds[i]);
@@ -129,8 +160,8 @@ public class CalendarStuff {
 				
 				if (currentEarliestEvent.getStart().getValue() < earliestEvent.getStart().getValue()) 
 				{
+					earliestEvent = currentEarliestEvent;
 					earliestEventUserCalendar = currentUserCalendar;
-					//earliestEvent = currentEarliestEvent;
 				}
 			}
 			
@@ -138,31 +169,75 @@ public class CalendarStuff {
 		}
 		
 		/**
-		 * Return an available time range if there is no overlap between startSearchTime and 
-		 * the earliest event's start time
-		 * @param startSearchTime
-		 * @param userCal
-		 * @return available Time Range
+		 * Return an available time range if the earliest event starts after the 
+		 * startSearchTime 
+		 * @param startSearchTime the current start of the 
+		 * @param userCal the calendar containing the earliest event
+		 * @return timeRange either the free time range or null
 		 */
-		public static TimePeriod ReturnTimeRangeIfNoOverlap(DateTime startSearchTime,FreeBusyCalendar userCal)
+		public static TimePeriod returnTimeRangeIfEarlier(DateTime startSearchTime,FreeBusyCalendar userCal)
 		{
-			//no overlap
+			//event starts after the start time
 			if (startSearchTime.getValue() < userCal.getBusy().get(0).getStart().getValue())
 			{
-				//move startSearchTime to START of earliest event
+				//make the time period
+				TimePeriod timeRange = new TimePeriod();
+				timeRange.setEnd(userCal.getBusy().get(0).getStart());
+				timeRange.setStart(startSearchTime);
+				
+				
+				//move startSearchTime to END of earliest event and remove event from calendar
 				startSearchTime = userCal.getBusy().get(0).getEnd();
 				userCal.getBusy().remove(0);
+				
+				
 				//TODO
 				//create time period with startSearchTime as the start and earliest event's start time as the end
-				return null; //this should be the available time period
+				return timeRange; //this should be the available time period
 			}
 			//there is overlap
 			else 
 			{
-				//move startSearchTime to END of earliest event
+				//move startSearchTime to END of earliest event and remove event from calendar
 				startSearchTime = userCal.getBusy().get(0).getEnd();
+				userCal.getBusy().remove(0);
 			}
 			
 			return null;
+		}
+		
+		/**
+		 * Return the free time range once all events have been considered
+		 * @param endSearchTime the end of the search period
+		 * @param startSearchTime the current start of the search period
+		 * @return timeRange the period between startSearchTime and endSearchTime
+		 */
+		public static TimePeriod returnTimeRangeIfNoEvents(DateTime endSearchTime, DateTime startSearchTime)
+		{
+			TimePeriod timeRange = new TimePeriod();
+			timeRange.setEnd(endSearchTime);
+			timeRange.setStart(startSearchTime);
+			
+			return timeRange;
+		}
+		
+		/**
+		 * Remove irrelevant events from the calendar map
+		 * @param startSearchTime 
+		 * @param userCalendars
+		 * @param userIds
+		 */
+		public static void removeIrrelevantEvents(DateTime startSearchTime, Map<String,FreeBusyCalendar> userCalendars,Object userIds[])
+		{
+			for (int i = 0; i < userCalendars.size(); i++)
+			{
+				for (int j = 0; j < userCalendars.size(); i++)
+				{
+					if (startSearchTime.getValue() >= userCalendars.get(userIds[i]).getBusy().get(j).getEnd().getValue())
+					{
+						userCalendars.get(userIds[i]).getBusy().remove(j);
+					}
+				}
+			}
 		}
 }
