@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.ui.AbstractLayout;
+import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Grid;
@@ -21,38 +23,20 @@ import com.vaadin.ui.Grid.SelectionMode;
 public class MeetingOverviewView extends ILoggedInView {
 	
 	@Override
-	protected void InitUI()
+	protected AbstractOrderedLayout InitUI()
 	{
 		Meeting meeting = (Meeting)UI.getCurrent().getSession().getAttribute("selectedMeeting");
 		if (meeting == null)
 		{
 			UI.getCurrent().getNavigator().navigateTo(Constants.URL_ALL_MEETINGS);
-			return;
+			return null;
 		}
 		
-		VerticalLayout layout = new VerticalLayout();
-		layout.setSpacing(true);
-		layout.setMargin(true);
+		VerticalLayout layout = (VerticalLayout)super.InitUI();
 		
 		GridLayout gl = new GridLayout(2, 7);//Grid layout for text fields
 		gl.setSpacing(true);
 		int row = 0;
-		
-		TextField emailField = new TextField();
-		emailField.setInputPrompt("Enter users email to invite them...");
-
-		Button emailButton = new Button("Send Email",
-				new Button.ClickListener() {
-
-			@Override
-			public void buttonClick(ClickEvent event) {
-				Notification.show("Email sent");
-				EmailNotifier.sendCreationMail(emailField.getValue(), meeting.name, 
-						meeting.code, meeting.password);
-				emailField.clear();
-			}
-
-		});
 
 		gl.addComponent(new Label("Title"), 0, row);
 		gl.addComponent(new Label(meeting.name), 1, row++);
@@ -77,13 +61,6 @@ public class MeetingOverviewView extends ILoggedInView {
 		gl.addComponent(new Label("Status"), 0, row);
 		gl.addComponent(new Label(meeting.getStatus()), 1, row++);
 		
-		for (MeetingMember member : meeting.members) {
-			if (member.ID == Controllers.UserID && member.access.equals(UserAccess.Creator)) {
-				layout.addComponent(emailField);
-				layout.addComponent(emailButton);
-			}
-		}
-		
 		layout.addComponent(gl);
 		
 		layout.addComponent(new Label("Members:"));
@@ -96,7 +73,39 @@ public class MeetingOverviewView extends ILoggedInView {
 		grid.setSelectionMode(SelectionMode.NONE);
 		layout.addComponent(grid);
 		
-		setContent(layout);
+		for (MeetingMember member : meeting.members) {
+			if (member.ID == Controllers.UserID && !member.access.equals(UserAccess.Member)) {
+				TextField emailField = new TextField();
+				emailField.setInputPrompt("Enter users email to invite them...");
+
+				Button emailButton = new Button("Send Email",
+						new Button.ClickListener() {
+
+					@Override
+					public void buttonClick(ClickEvent event) {
+						Notification.show("Email sent");
+						EmailNotifier.sendCreationMail(emailField.getValue(), meeting.name, 
+								meeting.code, meeting.password);
+						emailField.clear();
+					}
+
+				});
+				
+				layout.addComponent(emailField);
+				layout.addComponent(emailButton);
+			}
+		}
+		
+		Button finalize = new Button("Start vote");
+		finalize.addClickListener(e -> StartMeetingVote());
+		layout.addComponent(finalize);
+
+		return layout;
+	}
+	
+	private void StartMeetingVote()//TODO
+	{
+		
 	}
 
 	@Override
