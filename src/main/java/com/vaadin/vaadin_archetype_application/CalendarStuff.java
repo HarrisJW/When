@@ -51,29 +51,39 @@ public class CalendarStuff {
 			
 			Calendar calendar = new Calendar(httpTransport,jsonFactory,initializer);
 			
-			//fake start and end time for busy query
+			// Fake start and end time for busy query
+			// TODO: Replace with valid database calls.
 			String dIn = "2017-04-3 00:00:00";
 			String dIne = "2017-04-4 23:99:99";
+			
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			
 			Date d = df.parse(dIn);
 			startSearchTime = new DateTime(d, TimeZone.getTimeZone("America/Halifax"));
+			
 			Date de = df.parse(dIne);
 			endSearchTime = new DateTime(de, TimeZone.getTimeZone("America/Halifax"));
 
 			fbreq = new FreeBusyRequest();
 			fbreq.setTimeMin(startSearchTime);
 			fbreq.setTimeMax(endSearchTime);
+			
+			// TODO: Timezone should be provided by database.
 			fbreq.setTimeZone("America/Halifax");
 			
-			//fake user calendars to query
+			// Fake user calendars to query
+			// These addresses should result from valid calls to database.
 			FreeBusyRequestItem item = new FreeBusyRequestItem();
 			FreeBusyRequestItem item2 = new FreeBusyRequestItem();
+			
 			item.setId("whenapp3130@gmail.com");
 			item2.setId("maxaaronparsons@gmail.com");
 			
 			List<FreeBusyRequestItem> list = new ArrayList<FreeBusyRequestItem>();
 			list.add(item);
 			list.add(item2);
+			
+			// TODO: list should result from valid call to database.
 			fbreq.setItems(list);
 			
 			//query the calendar
@@ -85,20 +95,7 @@ public class CalendarStuff {
 			
 			//grab the user ids (their email addresses)
 			userIds = new ArrayList<Object>(Arrays.asList(userCalendars.keySet().toArray()));
-	
-			//this bypasses bugs to simulate the algorithm
-			/*FreeBusyCalendar test = userCalendars.get(userIds.get(0));
-			System.out.println(returnTimeRangeIfEarlier(test).toPrettyString());
-			System.out.println(returnTimeRangeIfEarlier(test).toPrettyString());
-			userCalendars.remove(userIds.get(0));
-			userIds.remove(0);
-			test = userCalendars.get(userIds.get(0));
-			System.out.println(returnTimeRangeIfEarlier(test).toPrettyString());
-			if (userIds.isEmpty() && userCalendars.isEmpty());
-			{
-				System.out.println(returnTimeRangeIfNoEvents());
-			}*/
-			
+
 			//grab and print available time ranges
 			System.out.println(getAvailableTimeRanges().toString());
 			
@@ -108,6 +105,7 @@ public class CalendarStuff {
 		 * Finds available time ranges and adds them to a list
 		 * @return said list
 		 */
+		
 		public static List<TimePeriod> getAvailableTimeRanges()
 		{
 			List<TimePeriod> availableTimePeriods = new ArrayList<TimePeriod>();
@@ -118,8 +116,10 @@ public class CalendarStuff {
 			{
 				//find calendar with earliest event
 				calendar = getCalendarWithEarliestEvent();
+				
 				//find if that calendar's earliest event conflicts with the startSearchTime
 				TimePeriod timeRange = returnTimeRangeIfEarlier(calendar);
+				
 				//if no conflict then add time range to list
 				if (timeRange != null)
 				{
