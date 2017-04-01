@@ -5,6 +5,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -31,131 +32,126 @@ import com.vaadin.ui.UI;
 
 public class CalendarStuff {
 	
-	private static GoogleCredential credential = (GoogleCredential) UI.getCurrent().getSession().getAttribute("credential");
+	private static GoogleCredential credential = 
+			(GoogleCredential) UI.getCurrent().getSession().getAttribute("credential");
+	private static HttpTransport httpTransport = new NetHttpTransport();
+    private static JsonFactory jsonFactory = new JacksonFactory();
+    
+	private static DateTime startSearchTime;
+	private static DateTime endSearchTime;
+	private static FreeBusyRequest fbreq;
+	private static FreeBusyResponse fbresp;
+	private static ArrayList<Object> userIds;
+	private static Map<String,FreeBusyCalendar> userCalendars;
+	
 	//test to calculate busy times for a single calendar
-		public static FreeBusyResponse calendarTest() throws IOException, ParseException
-		{
-			HttpTransport httpTransport = new NetHttpTransport();
-	        JsonFactory jsonFactory = new JacksonFactory();
-			
+		public static void calendarTest() throws IOException, ParseException
+		{	
 			HttpRequestInitializer initializer = credential;
 			
 			Calendar calendar = new Calendar(httpTransport,jsonFactory,initializer);
 			
-			//specify start and end time for busy query
-			String dIn = "2017-03-27 00:00:00";
-			String dIne = "2017-03-28 23:99:99";
+			//fake start and end time for busy query
+			String dIn = "2017-04-3 00:00:00";
+			String dIne = "2017-04-4 23:99:99";
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
 			Date d = df.parse(dIn);
-			DateTime startTime = new DateTime(d, TimeZone.getTimeZone("America/Halifax"));
-
+			startSearchTime = new DateTime(d, TimeZone.getTimeZone("America/Halifax"));
 			Date de = df.parse(dIne);
-			DateTime endTime = new DateTime(de, TimeZone.getTimeZone("America/Halifax"));
+			endSearchTime = new DateTime(de, TimeZone.getTimeZone("America/Halifax"));
 
-			FreeBusyRequest req = new FreeBusyRequest();
-			req.setTimeMin(startTime);
-			req.setTimeMax(endTime);
-			req.setTimeZone("America/Halifax");
+			fbreq = new FreeBusyRequest();
+			fbreq.setTimeMin(startSearchTime);
+			fbreq.setTimeMax(endSearchTime);
+			fbreq.setTimeZone("America/Halifax");
 			
+			//fake user calendars to query
 			FreeBusyRequestItem item = new FreeBusyRequestItem();
 			FreeBusyRequestItem item2 = new FreeBusyRequestItem();
+			item.setId("whenapp3130@gmail.com");
 			item2.setId("maxaaronparsons@gmail.com");
-			item.setId("whenapp3130@gmail.com");//specify calendar id
+			
 			List<FreeBusyRequestItem> list = new ArrayList<FreeBusyRequestItem>();
 			list.add(item);
 			list.add(item2);
-			req.setItems(list);
+			fbreq.setItems(list);
 			
 			//query the calendar
-			Calendar.Freebusy.Query fbq = calendar.freebusy().query(req);
-			FreeBusyResponse fbresponse = fbq.execute();
+			Calendar.Freebusy.Query fbq = calendar.freebusy().query(fbreq);
+			fbresp = fbq.execute();
 			
-			//print response
-			System.out.println(fbresponse.toString());
-			getAvailableTimeRanges(fbresponse);
+			//grab the Map containing user emails and calendars
+			userCalendars = fbresp.getCalendars();
 			
-			return fbresponse;
+			//grab the user ids (their email addresses)
+			userIds = new ArrayList<Object>(Arrays.asList(userCalendars.keySet().toArray()));
+	
+			//this bypasses bugs to simulate the algorithm
+			/*FreeBusyCalendar test = userCalendars.get(userIds.get(0));
+			System.out.println(returnTimeRangeIfEarlier(test).toPrettyString());
+			System.out.println(returnTimeRangeIfEarlier(test).toPrettyString());
+			userCalendars.remove(userIds.get(0));
+			userIds.remove(0);
+			test = userCalendars.get(userIds.get(0));
+			System.out.println(returnTimeRangeIfEarlier(test).toPrettyString());
+			if (userIds.isEmpty() && userCalendars.isEmpty());
+			{
+				System.out.println(returnTimeRangeIfNoEvents());
+			}*/
+			
+			//grab and print available time ranges
+			System.out.println(getAvailableTimeRanges().toString());
+			
 		}
 		
 		/**
-		 * Allows a logged in user to share their calendar with another user
-		 * @param email email of the user to share with
-		 * @throws IOException
+		 * Finds available time ranges and adds them to a list
+		 * @return said list
 		 */
-		public static void shareCalendar(String email) throws IOException 
-		{
-			HttpTransport httpTransport = new NetHttpTransport();
-	        JsonFactory jsonFactory = new JacksonFactory();
-	        
-			Calendar calendar = new Calendar(httpTransport,jsonFactory,credential);
-			
-			AclRule rule = new AclRule();
-			Scope scope = new Scope();
-			scope.setType("user");
-			scope.setValue("email");
-			
-			rule.setScope(scope);
-			rule.setRole("freeBusyReader");
-			AclRule inserted = calendar.acl().insert("primary", rule).execute();
-		}
-		
-		/**
-		 * Finds available time ranges for all users
-		 * @param fbr The response to the Calendar query i.e. a map that contains busy events
-		 * 			  for all users
-		 * @return a list of free time periods
-		 */
-		public static List<TimePeriod> getAvailableTimeRanges(FreeBusyResponse fbr)
+		public static List<TimePeriod> getAvailableTimeRanges()
 		{
 			List<TimePeriod> availableTimePeriods = new ArrayList<TimePeriod>();
 			
-			// For all users represented in the shared calendar...
-			// Get an array of user IDs.
-			// Note: User IDs are just email addresses.
-			Set<String> users = fbr.getCalendars().keySet();
-			Object userIds[] = users.toArray();
-			
-			//fake start and end times for meeting range
-			Date start = new Date();
-			Date end = new Date();
-			
-			DateTime startSearchTime = new DateTime(start);
-			DateTime endSearchTime = new DateTime(end);
-			
 			FreeBusyCalendar calendar;
-			Map<String,FreeBusyCalendar> userCalendars = fbr.getCalendars();
-			while (userCalendars.size() != 0)
+			//there are still events 
+			while (!userCalendars.isEmpty())
 			{
-				calendar = getCalendarWithEarliestEvent(fbr,userIds);
-				TimePeriod timeRange = returnTimeRangeIfEarlier(startSearchTime,calendar);
+				//find calendar with earliest event
+				calendar = getCalendarWithEarliestEvent();
+				//find if that calendar's earliest event conflicts with the startSearchTime
+				TimePeriod timeRange = returnTimeRangeIfEarlier(calendar);
+				//if no conflict then add time range to list
 				if (timeRange != null)
 				{
 					availableTimePeriods.add(timeRange);
 				}
-				
+				//check for and prune empty calendars
+				pruneCalendarsAndIds();
 			}
-			availableTimePeriods.add(returnTimeRangeIfNoEvents(endSearchTime,startSearchTime));
+			//add a time range if there are no events left/to begin with
+			availableTimePeriods.add(returnTimeRangeIfNoEvents());
 			
 			return availableTimePeriods;
 		}
 		
-		//finds the earliest starting event
-		public static FreeBusyCalendar getCalendarWithEarliestEvent(FreeBusyResponse fbr,Object userIds[])
+		/**
+		 * Finds the calendar with the earliest event
+		 * @return said calendar
+		 */
+		public static FreeBusyCalendar getCalendarWithEarliestEvent()
 		{
 			TimePeriod earliestEvent; 
-			TimePeriod currentEarliestEvent = null;
+			TimePeriod currentEarliestEvent;
 			
-			FreeBusyCalendar currentUserCalendar = null;
+			FreeBusyCalendar earliestEventUserCalendar;
+			FreeBusyCalendar currentUserCalendar;
 			
-			currentUserCalendar = fbr.getCalendars().get(userIds[0]);
-			FreeBusyCalendar earliestEventUserCalendar = null;
-			earliestEvent = currentUserCalendar.getBusy().get(0);
+			earliestEventUserCalendar = userCalendars.get(userIds.get(0));
+			earliestEvent = earliestEventUserCalendar.getBusy().get(0);
 			
-			for (int i = 1; i < fbr.getCalendars().size(); i++) 
+			for (int i = 1; i < userCalendars.size(); i++) 
 			{
-				currentUserCalendar = fbr.getCalendars().get(userIds[i]);
-				
+				currentUserCalendar = userCalendars.get(userIds.get(i));
 				currentEarliestEvent = currentUserCalendar.getBusy().get(0);
 				
 				if (currentEarliestEvent.getStart().getValue() < earliestEvent.getStart().getValue()) 
@@ -171,48 +167,50 @@ public class CalendarStuff {
 		/**
 		 * Return an available time range if the earliest event starts after the 
 		 * startSearchTime 
-		 * @param startSearchTime the current start of the 
+		 * @param startSearchTime the current start of the search period
 		 * @param userCal the calendar containing the earliest event
 		 * @return timeRange either the free time range or null
 		 */
-		public static TimePeriod returnTimeRangeIfEarlier(DateTime startSearchTime,FreeBusyCalendar userCal)
+		public static TimePeriod returnTimeRangeIfEarlier(FreeBusyCalendar userCal)
 		{
 			//event starts after the start time
 			if (startSearchTime.getValue() < userCal.getBusy().get(0).getStart().getValue())
 			{
 				//make the time period
 				TimePeriod timeRange = new TimePeriod();
-				timeRange.setEnd(userCal.getBusy().get(0).getStart());
 				timeRange.setStart(startSearchTime);
-				
+				timeRange.setEnd(userCal.getBusy().get(0).getStart());
 				
 				//move startSearchTime to END of earliest event and remove event from calendar
 				startSearchTime = userCal.getBusy().get(0).getEnd();
 				userCal.getBusy().remove(0);
 				
-				
-				//TODO
-				//create time period with startSearchTime as the start and earliest event's start time as the end
 				return timeRange; //this should be the available time period
 			}
-			//there is overlap
-			else 
+			//startSearchTime is inside the earliest event's time period
+			else if (userCal.getBusy().get(0).getStart().getValue() <= startSearchTime.getValue()
+				&& userCal.getBusy().get(0).getEnd().getValue() > startSearchTime.getValue())
 			{
 				//move startSearchTime to END of earliest event and remove event from calendar
 				startSearchTime = userCal.getBusy().get(0).getEnd();
 				userCal.getBusy().remove(0);
+			}
+			//the earliest event ends before the startSearchTime
+			else
+			{
+				userCal.getBusy().remove(0); //remove event from calendar
 			}
 			
 			return null;
 		}
 		
 		/**
-		 * Return the free time range once all events have been considered
+		 * Return a free time range if there are no events
 		 * @param endSearchTime the end of the search period
 		 * @param startSearchTime the current start of the search period
-		 * @return timeRange the period between startSearchTime and endSearchTime
+		 * @return timeRange 
 		 */
-		public static TimePeriod returnTimeRangeIfNoEvents(DateTime endSearchTime, DateTime startSearchTime)
+		public static TimePeriod returnTimeRangeIfNoEvents()
 		{
 			TimePeriod timeRange = new TimePeriod();
 			timeRange.setEnd(endSearchTime);
@@ -222,22 +220,39 @@ public class CalendarStuff {
 		}
 		
 		/**
-		 * Remove irrelevant events from the calendar map
-		 * @param startSearchTime 
-		 * @param userCalendars
-		 * @param userIds
+		 * Cuts away empty calendars and their associated Ids
 		 */
-		public static void removeIrrelevantEvents(DateTime startSearchTime, Map<String,FreeBusyCalendar> userCalendars,Object userIds[])
+		public static void pruneCalendarsAndIds()
 		{
 			for (int i = 0; i < userCalendars.size(); i++)
-			{
-				for (int j = 0; j < userCalendars.size(); i++)
+			{	
+				if (userCalendars.get(userIds.get(i)).getBusy().isEmpty())
 				{
-					if (startSearchTime.getValue() >= userCalendars.get(userIds[i]).getBusy().get(j).getEnd().getValue())
-					{
-						userCalendars.get(userIds[i]).getBusy().remove(j);
-					}
+					userCalendars.remove(userIds.get(i));
+					userIds.remove(i);
+					i--;
 				}
 			}
+		}
+		
+		/**
+		 * Allows a logged in user to share their calendar with another user
+		 * @param email email of the user to share with
+		 * @throws IOException
+		 */
+		public static void shareCalendar(String email) throws IOException 
+		{   
+			HttpRequestInitializer initializer = credential;
+			
+			Calendar calendar = new Calendar(httpTransport,jsonFactory,initializer);
+			
+			AclRule rule = new AclRule();
+			Scope scope = new Scope();
+			scope.setType("user");
+			scope.setValue("email");
+			
+			rule.setScope(scope);
+			rule.setRole("freeBusyReader");
+			AclRule inserted = calendar.acl().insert("primary", rule).execute();
 		}
 }
