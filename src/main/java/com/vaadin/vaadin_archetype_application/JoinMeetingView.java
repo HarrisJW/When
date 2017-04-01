@@ -1,6 +1,7 @@
 package com.vaadin.vaadin_archetype_application;
 
 import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
@@ -29,13 +30,13 @@ public class JoinMeetingView extends ILoggedInView {
 	
 	//Create all UI elements and set button click handler
 	@Override
-	protected void InitUI()
+	protected AbstractOrderedLayout InitUI()
 	{
 		tbMeetingID = new TextField();
 		tbMeetingPassword = new PasswordField();
 		lErrorMessage = new Label("", ContentMode.HTML);
 		
-		VerticalLayout layout = new VerticalLayout();//Global layout
+		VerticalLayout layout = (VerticalLayout)super.InitUI();//Global layout
 		layout.setSpacing(true);
 		layout.setMargin(true);
 		
@@ -55,8 +56,8 @@ public class JoinMeetingView extends ILoggedInView {
 		
 		//Error message label
 		layout.addComponent(lErrorMessage);
-		
-		setContent(layout);
+
+		return layout;
 	}
 
 	//Join meeting button click handler. Communicates with DB and changes state according to the return code

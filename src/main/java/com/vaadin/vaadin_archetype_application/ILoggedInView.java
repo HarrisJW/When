@@ -4,13 +4,17 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Page;
 import com.vaadin.ui.AbstractLayout;
+import com.vaadin.ui.AbstractOrderedLayout;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
 public abstract class ILoggedInView extends Panel implements View {
 	
 	//Used to indicate if current page is redirecting user to the login screen
 	private boolean IsForbidden = false;
+	protected AbstractOrderedLayout layout = null;
 
 	@Override
 	public void enter(ViewChangeEvent event)
@@ -23,13 +27,28 @@ public abstract class ILoggedInView extends Panel implements View {
 			return;
 		Page.getCurrent().setTitle(GetPageTitle());
 		setSizeFull();
-		InitUI();
+		layout = InitUI();
+		if (layout != null)
+			setContent(layout);
 	}
 	
 	//Initialize UI here
-	protected void InitUI()
+	protected AbstractOrderedLayout InitUI()
 	{
+		VerticalLayout vl = new VerticalLayout();
+		vl.setSpacing(true);
+		vl.setMargin(true);
 		
+		Button menu = new Button("Back to menu");
+		menu.addClickListener(e -> OnMenuButtonClick());
+		vl.addComponent(menu);
+		
+		return vl;
+	}
+	
+	protected void OnMenuButtonClick()
+	{
+		UI.getCurrent().getNavigator().navigateTo("");	
 	}
 
 	//Used to indicate if current page is redirecting user to the login screen

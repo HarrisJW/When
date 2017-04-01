@@ -3,6 +3,7 @@ package com.vaadin.vaadin_archetype_application;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.google.api.client.util.DateTime;
 import com.vaadin.vaadin_archetype_application.TimeSlotVote.Vote;
 
 //Data container for meetings
@@ -22,7 +23,7 @@ public class Meeting {
 	public String code;
 	public String password;
 	public String name;
-	public Date startDate, endDate;
+	public DateTime startDate, endDate;
 	public long duration;
 	public MeetingState state;
 	public int membersCount;
@@ -38,8 +39,8 @@ public class Meeting {
 		this.ID = ID;
 		this.code = code;
 		this.name = name;
-		this.startDate = startDate;
-		this.endDate = endDate;
+		this.startDate = new DateTime(startDate);
+		this.endDate = new DateTime(endDate);
 		this.duration = duration;
 		
 	}

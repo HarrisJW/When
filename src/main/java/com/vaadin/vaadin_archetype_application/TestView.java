@@ -50,7 +50,7 @@ public class TestView extends Panel implements View {
 			}
 		});
 		
-		layout.addComponent(bLogin);
+		//layout.addComponent(bLogin);
 
 		//*****************************************************************************
 		// Join meeting button.

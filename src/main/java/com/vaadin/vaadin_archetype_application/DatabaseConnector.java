@@ -3,13 +3,19 @@ package com.vaadin.vaadin_archetype_application;
 import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.text.SimpleDateFormat;
+
+import com.google.api.client.util.DateTime;
 
 //Class responsible for fetching and uploading data to database
 public class DatabaseConnector extends MySQLProvider {
 	
 	private Connection connection = null;
+	private SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
 	//Opens db connection
 	public void Initialize()
@@ -84,8 +90,8 @@ public class DatabaseConnector extends MySQLProvider {
 	//Creates meeting. Returns SQL return code
 	@Override
 	public long CreateMeeting(String password, Date startDate, Date endDate, String name, long duration, long userID) {
-		ArrayList<Object[]> r = ExecuteStoredProcedureRead(connection, "createMeeting", new Object[] { password, startDate,
-				endDate, name, duration, userID });
+		ArrayList<Object[]> r = ExecuteStoredProcedureRead(connection, "createMeeting", new Object[] { password, sdf.format(startDate),
+				sdf.format(endDate), name, duration, userID });
 		Object[] o = r.get(0);
 		return (int)o[0];
 	}
@@ -107,8 +113,8 @@ public class DatabaseConnector extends MySQLProvider {
 		Meeting meeting = new Meeting();
 		meeting.ID = meetingID;
 		meeting.name = (String)o[0];
-		meeting.startDate = (Date)o[1];
-		meeting.endDate = (Date)o[2];
+		meeting.startDate = new DateTime((Date)o[1]);
+		meeting.endDate = new DateTime((Date)o[2]);
 		meeting.duration = (long)o[3];
 		meeting.SetState((int)o[4]);
 		meeting.code = (String)o[5];
@@ -131,8 +137,8 @@ public class DatabaseConnector extends MySQLProvider {
 			Meeting meeting = new Meeting();
 			meeting.ID = (int)o[0];
 			meeting.name = (String)o[1];
-			meeting.startDate = (Date)o[2];
-			meeting.endDate = (Date)o[3];
+			meeting.startDate = new DateTime((Date)o[2]);
+			meeting.endDate = new DateTime((Date)o[3]);
 			meeting.duration = (long)o[4];
 			meeting.SetState((int)o[5]);
 			meeting.code = (String)o[6];
@@ -177,7 +183,8 @@ public class DatabaseConnector extends MySQLProvider {
 	//Updates meeting parameters
 	@Override
 	public boolean UpdateMeetingTime(long meetingID, Date startDate, Date endDate, long duration) {
-		ExecuteStoredProcedureRead(connection, "updateMeetingTime", new Object[] { meetingID, startDate, endDate, duration });
+		ExecuteStoredProcedureRead(connection, "updateMeetingTime", new Object[] { meetingID, sdf.format(startDate), 
+				sdf.format(endDate), duration });
 		return true;
 	}
 
@@ -219,8 +226,8 @@ public class DatabaseConnector extends MySQLProvider {
 			t = result[i] = new TimeRange();
 			o = r.get(i);
 			t.id = (int)o[0];
-			t.startTime = (Date)o[1];
-			t.endTime = (Date)o[2];
+			t.startTime = new DateTime((Date)o[1]);
+			t.endTime = new DateTime((Date)o[2]);
 		}
 		
 		return result;
@@ -239,8 +246,8 @@ public class DatabaseConnector extends MySQLProvider {
 			t = result[i] = new TimeRange();
 			o = r.get(i);
 			t.id = (int)o[0];
-			t.startTime = (Date)o[1];
-			t.endTime = (Date)o[2];
+			t.startTime = new DateTime((Date)o[1]);
+			t.endTime = new DateTime((Date)o[2]);
 		}
 		
 		return result;
@@ -261,8 +268,8 @@ public class DatabaseConnector extends MySQLProvider {
 			t = result[i] = new TimeRange();
 			o = r.get(i);
 			t.id = (int)o[0];
-			t.startTime = (Date)o[1];
-			t.endTime = (Date)o[2];
+			t.startTime = new DateTime((Date)o[1]);
+			t.endTime = new DateTime((Date)o[2]);
 		}
 		
 		return result;
@@ -270,7 +277,8 @@ public class DatabaseConnector extends MySQLProvider {
 
 	@Override
 	public long AddUserTimeRange(long meetingID, long userID, Date start, Date end) {
-		ArrayList<Object[]> r = ExecuteStoredProcedureRead(connection, "addUserTimeRange", new Object[] { meetingID, userID, start, end });
+		ArrayList<Object[]> r = ExecuteStoredProcedureRead(connection, "addUserTimeRange", new Object[] { meetingID, userID, sdf.format(start), 
+				sdf.format(end)});
 		return ((BigInteger)r.get(0)[0]).longValue();
 	}
 
@@ -287,7 +295,8 @@ public class DatabaseConnector extends MySQLProvider {
 	@Override
 	public boolean AddAvailableTimeRange(long meetingID, Date startDate, Date endDate)
 	{
-		return ExecuteStoredProcedure(connection, "addAvailableTimeRange", new Object[] { meetingID, startDate, endDate });
+		return ExecuteStoredProcedure(connection, "addAvailableTimeRange", new Object[] { meetingID, sdf.format(startDate), 
+				sdf.format(endDate)});
 	}
 	
 	
@@ -305,8 +314,8 @@ public class DatabaseConnector extends MySQLProvider {
 			t = result[i] = new TimeSlot();
 			o = r.get(i);
 			t.id = (int)o[0];
-			t.startTime = (Date)o[1];
-			t.endTime = (Date)o[2];
+			t.startTime = new DateTime((Date)o[1]);
+			t.endTime = new DateTime((Date)o[2]);
 			t.votes = GetTimeSlotVotes(t.id);
 		}
 		

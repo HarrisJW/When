@@ -13,6 +13,8 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Page;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.AbstractLayout;
+import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -22,7 +24,7 @@ import com.vaadin.ui.UI;
 
 public class LoggedOnView extends ILoggedInView {
 	
-	protected VerticalLayout layout;
+	//protected VerticalLayout layout;
 	protected GoogleCredential credential;
 	
 
@@ -38,35 +40,21 @@ public class LoggedOnView extends ILoggedInView {
 	}
 	
 	@Override
-	protected void InitUI()
+	protected AbstractOrderedLayout InitUI()
 	{
 		// Get a local reference to the UI's credential, which was set after successful login.
 		credential = (GoogleCredential) UI.getCurrent().getSession().getAttribute("credential");
 		
-		layout = new VerticalLayout();
+		layout = (VerticalLayout)super.InitUI();
 		layout.setSpacing(true);
 		layout.setMargin(true);
 		
 		addLogoutButton();
 		addMeetingButton();
 		addLabel();
-		
-		
-		try {
-			CalendarStuff.shareCalendar("whenapp3130@gmail.com");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		try {
-			CalendarStuff.calendarTest();
-		} catch (IOException | ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		setContent(layout);
+
+		return layout;
+
 	}
 	
 	public void addLogoutButton(){

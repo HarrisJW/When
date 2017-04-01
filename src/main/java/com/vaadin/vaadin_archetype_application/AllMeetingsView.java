@@ -9,6 +9,7 @@ import java.util.List;
 import com.google.api.services.plus.model.Person;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.event.SelectionEvent;
+import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.Label;
@@ -25,9 +26,9 @@ public class AllMeetingsView extends ILoggedInView {
 	protected GoogleCredential credential;
 
 	@Override
-	protected void InitUI()
+	protected AbstractOrderedLayout InitUI()
 	{
-		VerticalLayout layout = new VerticalLayout();
+		VerticalLayout layout = (VerticalLayout)super.InitUI();
 		layout.setSpacing(true);
 		layout.setMargin(true);
 		
@@ -49,8 +50,8 @@ public class AllMeetingsView extends ILoggedInView {
 		grid.setSelectionMode(SelectionMode.SINGLE);
 		grid.addSelectionListener(e -> ItemSelected(e));
 		layout.addComponent(grid);
-		
-		setContent(layout);
+
+		return layout;
 	}
 	
 	private void ItemSelected(SelectionEvent e)
