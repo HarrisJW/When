@@ -253,7 +253,7 @@ public class CalendarStuff {
 			AclRule rule = new AclRule();
 			Scope scope = new Scope();
 			scope.setType("user");
-			scope.setValue("email");
+			scope.setValue(email);
 			
 			rule.setScope(scope);
 			rule.setRole("freeBusyReader");

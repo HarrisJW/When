@@ -96,6 +96,16 @@ public class MeetingOverviewView extends ILoggedInView {
 			}
 		}
 		
+		Button viewTimeRangeButton = new Button("View Available Time Ranges",
+				new Button.ClickListener() {
+
+			@Override
+			public void buttonClick(ClickEvent event) {
+				
+			}
+
+		});
+		
 		Button finalize = new Button("Start vote");
 		finalize.addClickListener(e -> StartMeetingVote());
 		layout.addComponent(finalize);
