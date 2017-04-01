@@ -43,9 +43,10 @@ public class CalendarStuff {
 	private static FreeBusyResponse fbresp;
 	private static ArrayList<Object> userIds;
 	private static Map<String,FreeBusyCalendar> userCalendars;
+	private static List<TimePeriod> availableTimePeriods = new ArrayList<TimePeriod>();
 	
 	//test to calculate busy times for a single calendar
-		public static void calendarTest() throws IOException, ParseException
+		public static List<TimePeriod> calendarTest() throws IOException, ParseException
 		{	
 			HttpRequestInitializer initializer = credential;
 			
@@ -80,12 +81,12 @@ public class CalendarStuff {
 			
 			item.setId("whenapp3130@gmail.com");
 			item2.setId("maxaaronparsons@gmail.com");
-			item3.setId("j.wilfred.harris@gmail.com");
+			//item3.setId("j.wilfred.harris@gmail.com");
 			
 			List<FreeBusyRequestItem> list = new ArrayList<FreeBusyRequestItem>();
 			list.add(item);
 			list.add(item2);
-			list.add(item3);
+			//list.add(item3); //button clicker needs everybody's calendar before querying
 			
 			// TODO: list should result from valid call to database.
 			fbreq.setItems(list);
@@ -101,8 +102,9 @@ public class CalendarStuff {
 			userIds = new ArrayList<Object>(Arrays.asList(userCalendars.keySet().toArray()));
 
 			//grab and print available time ranges
-			System.out.println(getAvailableTimeRanges().toString());
+			getAvailableTimeRanges();
 			
+			return availableTimePeriods;
 		}
 		
 		/**
@@ -110,10 +112,8 @@ public class CalendarStuff {
 		 * @return said list
 		 */
 		
-		public static List<TimePeriod> getAvailableTimeRanges()
-		{
-			List<TimePeriod> availableTimePeriods = new ArrayList<TimePeriod>();
-			
+		public static void getAvailableTimeRanges()
+		{	
 			FreeBusyCalendar calendar;
 			//there are still events 
 			while (!userCalendars.isEmpty())
@@ -134,8 +134,6 @@ public class CalendarStuff {
 			}
 			//add a time range if there are no events left/to begin with
 			availableTimePeriods.add(returnTimeRangeIfNoEvents());
-			
-			return availableTimePeriods;
 		}
 		
 		/**

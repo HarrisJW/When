@@ -1,5 +1,7 @@
 package com.vaadin.vaadin_archetype_application;
 
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
@@ -73,6 +75,7 @@ public class MeetingOverviewView extends ILoggedInView {
 		grid.setSelectionMode(SelectionMode.NONE);
 		layout.addComponent(grid);
 		
+		//TODO this logic (determining if creator or not) should be somewhere else
 		for (MeetingMember member : meeting.members) {
 			if (member.ID == Controllers.UserID && !member.access.equals(UserAccess.Member)) {
 				TextField emailField = new TextField();
@@ -96,15 +99,22 @@ public class MeetingOverviewView extends ILoggedInView {
 			}
 		}
 		
+		//TODO only creators should be able to hit the getTimeRange and vote buttons
+		Label availableTimeRanges = new Label();
+		layout.addComponent(availableTimeRanges);
 		Button viewTimeRangeButton = new Button("View Available Time Ranges",
 				new Button.ClickListener() {
 
 			@Override
 			public void buttonClick(ClickEvent event) {
-				
+				try {
+					availableTimeRanges.setCaption(CalendarStuff.calendarTest().toString());
+				} catch (IOException | ParseException e) {
+					e.printStackTrace();
+				}
 			}
-
 		});
+		layout.addComponent(viewTimeRangeButton);
 		
 		Button finalize = new Button("Start vote");
 		finalize.addClickListener(e -> StartMeetingVote());
