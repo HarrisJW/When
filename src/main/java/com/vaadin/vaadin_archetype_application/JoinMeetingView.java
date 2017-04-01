@@ -1,5 +1,7 @@
 package com.vaadin.vaadin_archetype_application;
 
+import java.io.IOException;
+
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Button;
@@ -67,7 +69,13 @@ public class JoinMeetingView extends ILoggedInView {
 		System.out.println("TryJoinMeeting returned code " + String.valueOf(code));
 		switch (code) {
 		case 0:
-			UI.getCurrent().getNavigator().navigateTo(Constants.URL_MEETING_OVERVIEW);					
+			//TODO Database needs to store member EMAILS!
+			try {
+				CalendarStuff.shareCalendar("j.wilfred.harris@gmail.com");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			UI.getCurrent().getNavigator().navigateTo(Constants.URL_MEETING_OVERVIEW);	
 			break;
 
 		case Constants.CODE_INVALID_MEETING_ID_PASSWORD:

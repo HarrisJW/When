@@ -76,13 +76,16 @@ public class CalendarStuff {
 			// These addresses should result from valid calls to database.
 			FreeBusyRequestItem item = new FreeBusyRequestItem();
 			FreeBusyRequestItem item2 = new FreeBusyRequestItem();
+			FreeBusyRequestItem item3 = new FreeBusyRequestItem();
 			
 			item.setId("whenapp3130@gmail.com");
 			item2.setId("maxaaronparsons@gmail.com");
+			item3.setId("j.wilfred.harris@gmail.com");
 			
 			List<FreeBusyRequestItem> list = new ArrayList<FreeBusyRequestItem>();
 			list.add(item);
 			list.add(item2);
+			list.add(item3);
 			
 			// TODO: list should result from valid call to database.
 			fbreq.setItems(list);
