@@ -163,7 +163,8 @@ public class DatabaseConnector extends MySQLProvider {
 			mm.ID = (int)o[0];
 			mm.firstName = (String)o[1];
 			mm.lastName = (String)o[2];
-			mm.SetAccess((int)o[3]);
+			mm.email = (String)o[3];
+			mm.SetAccess((int)o[4]);
 			System.out.println("");
 			meetingMembers.add(mm);
 		}

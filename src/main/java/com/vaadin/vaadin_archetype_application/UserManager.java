@@ -59,7 +59,7 @@ public final class UserManager {
 	
 	public static String GetUserEmailAddress()
 	{
-		return GetGooglePersonInfo().getEmails().toString();
+		return GetGooglePersonInfo().getEmails().get(0).getValue();
 	}
 	
 	public static String GetUserDisplayName()
