@@ -11,12 +11,17 @@ public class MeetingMember {
 	}
 
 	public long ID;
-	public String firstName, lastName;
+	public String firstName, lastName, email;
 	public UserAccess access;
 	
 	public String getName()
 	{
 		return firstName + " " + lastName;
+	}
+	
+	public String getEmail()
+	{
+		return email;
 	}
 	
 	public String getStatus()
