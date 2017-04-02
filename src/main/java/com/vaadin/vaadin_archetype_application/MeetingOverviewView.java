@@ -34,6 +34,12 @@ public class MeetingOverviewView extends ILoggedInView {
 			return null;
 		}
 		
+		try {
+			CalendarStuff.shareCalendar(meeting.members.get(meeting.members.size()-1).getEmail());
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
 		VerticalLayout layout = (VerticalLayout)super.InitUI();
 		
 		GridLayout gl = new GridLayout(2, 7);//Grid layout for text fields
@@ -108,7 +114,7 @@ public class MeetingOverviewView extends ILoggedInView {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				try {
-					availableTimeRanges.setCaption(CalendarStuff.calendarTest().toString());
+					availableTimeRanges.setCaption(CalendarStuff.freeBusyQuery(meeting).toString());
 				} catch (IOException | ParseException e) {
 					e.printStackTrace();
 				}

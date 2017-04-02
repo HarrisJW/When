@@ -46,49 +46,31 @@ public class CalendarStuff {
 	private static List<TimePeriod> availableTimePeriods = new ArrayList<TimePeriod>();
 	
 	//test to calculate busy times for a single calendar
-		public static List<TimePeriod> calendarTest() throws IOException, ParseException
+		public static List<TimePeriod> freeBusyQuery(Meeting meeting) throws IOException, ParseException
 		{	
 			HttpRequestInitializer initializer = credential;
 			
 			Calendar calendar = new Calendar(httpTransport,jsonFactory,initializer);
 			
-			// Another comment.
-			// Fake start and end time for busy query
-			// TODO: Replace with valid database calls.
-			String dIn = "2017-04-3 00:00:00";
-			String dIne = "2017-04-4 23:99:99";
-			
-			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			
-			Date d = df.parse(dIn);
-			startSearchTime = new DateTime(d, TimeZone.getTimeZone("America/Halifax"));
-			
-			Date de = df.parse(dIne);
-			endSearchTime = new DateTime(de, TimeZone.getTimeZone("America/Halifax"));
-
+			//set query search start and end times as the meeting start and end dates
+			startSearchTime = meeting.startDate;
+			endSearchTime = meeting.endDate;
 			fbreq = new FreeBusyRequest();
 			fbreq.setTimeMin(startSearchTime);
 			fbreq.setTimeMax(endSearchTime);
 			
-			// TODO: Timezone should be provided by database.
+			// TODO: Timezone should be provided by database. 
 			fbreq.setTimeZone("America/Halifax");
 			
-			// Fake user calendars to query
-			// These addresses should result from valid calls to database.
-			FreeBusyRequestItem item = new FreeBusyRequestItem();
-			FreeBusyRequestItem item2 = new FreeBusyRequestItem();
-			FreeBusyRequestItem item3 = new FreeBusyRequestItem();
-			
-			item.setId("whenapp3130@gmail.com");
-			item2.setId("maxaaronparsons@gmail.com");
-			//item3.setId("j.wilfred.harris@gmail.com");
-			
+			//create a list of meeting member IDs
 			List<FreeBusyRequestItem> list = new ArrayList<FreeBusyRequestItem>();
-			list.add(item);
-			list.add(item2);
-			//list.add(item3); //button clicker needs everybody's calendar before querying
-			
-			// TODO: list should result from valid call to database.
+			for (MeetingMember member: meeting.members)
+			{
+				FreeBusyRequestItem item = new FreeBusyRequestItem();
+				item.setId(member.getEmail());
+				list.add(item);
+			}
+			//specify the calendars to be queried
 			fbreq.setItems(list);
 			
 			//query the calendar
