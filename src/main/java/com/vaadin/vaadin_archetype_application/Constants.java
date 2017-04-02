@@ -17,5 +17,5 @@ public final class Constants {
 	
 	//Return codes
 	public static final int CODE_INVALID_MEETING_ID_PASSWORD = -1;
-	public static final int CODE_MEETING_ID_EMPTY = 2;
+	public static final int CODE_MEETING_ID_EMPTY = -2;
 }

@@ -65,22 +65,25 @@ public class JoinMeetingView extends ILoggedInView {
 	{
 		int code = Controllers.DatabaseConnector.TryJoinMeeting(tbMeetingID.getValue(), tbMeetingPassword.getValue(), Controllers.UserID);
 		System.out.println("TryJoinMeeting returned code " + String.valueOf(code));
-		switch (code) {
-		case 0:
-			UI.getCurrent().getNavigator().navigateTo(Constants.URL_MEETING_OVERVIEW);					
-			break;
-
-		case Constants.CODE_INVALID_MEETING_ID_PASSWORD:
+		if (code == Constants.CODE_INVALID_MEETING_ID_PASSWORD)
+		{
 			setErrorMessage("Invalid ID / Password combination");
-			break;
-
-		case Constants.CODE_MEETING_ID_EMPTY:
+		}
+		else if (code == Constants.CODE_MEETING_ID_EMPTY)
+		{
 			setErrorMessage("Meeting ID can't be empty");
-			break;
-			
-		default:
+		}
+		else if (code < 0)
+		{
 			setErrorMessage("Unknown behavior");
-			break;
+		}
+		else//code is meeting id here
+		{
+			//UI.getCurrent().getNavigator().navigateTo(Constants.URL_MEETING_OVERVIEW);
+
+			Meeting meeting = Controllers.DatabaseConnector.GetMeetingDescription(code);
+			UI.getCurrent().getSession().setAttribute("selectedMeeting", meeting);
+			UI.getCurrent().getNavigator().navigateTo(Constants.URL_MEETING_OVERVIEW);
 		}
 	}
 	
