@@ -34,11 +34,13 @@ public class MeetingOverviewView extends ILoggedInView {
 			return null;
 		}
 		
+		/*//TODO move this to JoinMeetingView and share calendar with all members rather than
+		 *       only the creator -> to avoid errors
 		try {
 			CalendarStuff.shareCalendar(meeting.members.get(meeting.members.size()-1).getEmail());
 		} catch (IOException e1) {
 			e1.printStackTrace();
-		}
+		}*/
 		
 		VerticalLayout layout = (VerticalLayout)super.InitUI();
 		
@@ -105,26 +107,21 @@ public class MeetingOverviewView extends ILoggedInView {
 			}
 		}
 		
-		//TODO only creators should be able to hit the getTimeRange and vote buttons
-		Label availableTimeRanges = new Label();
-		layout.addComponent(availableTimeRanges);
-		Button viewTimeRangeButton = new Button("View Available Time Ranges",
-				new Button.ClickListener() {
-
-			@Override
-			public void buttonClick(ClickEvent event) {
-				try {
-					availableTimeRanges.setCaption(CalendarStuff.freeBusyQuery(meeting).toString());
-				} catch (IOException | ParseException e) {
-					e.printStackTrace();
-				}
-			}
-		});
-		layout.addComponent(viewTimeRangeButton);
-		
 		Button finalize = new Button("Start vote");
 		finalize.addClickListener(e -> StartMeetingVote());
 		layout.addComponent(finalize);
+		
+		MeetingCalendar mCal = new MeetingCalendar(meeting);
+		mCal.setStartDate();
+		mCal.setEndDate();
+		mCal.setVisibleHours(6, 20);
+		try {
+			mCal.addTimeRanges(CalendarStuff.freeBusyQuery(meeting));
+		} catch (ParseException | IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		layout.addComponent(mCal.getCalendar());
 
 		return layout;
 	}
