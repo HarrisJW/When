@@ -2,6 +2,7 @@ package com.vaadin.vaadin_archetype_application;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.text.ParseException;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
@@ -53,6 +54,7 @@ public class LoggedOnView extends ILoggedInView {
 		addLabel();
 
 		return layout;
+
 	}
 	
 	public void addLogoutButton(){

@@ -1,5 +1,7 @@
 package com.vaadin.vaadin_archetype_application;
 
+import java.io.IOException;
+
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Button;

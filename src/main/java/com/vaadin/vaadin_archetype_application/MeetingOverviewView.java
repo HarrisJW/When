@@ -1,5 +1,7 @@
 package com.vaadin.vaadin_archetype_application;
 
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
@@ -31,6 +33,14 @@ public class MeetingOverviewView extends ILoggedInView {
 			UI.getCurrent().getNavigator().navigateTo(Constants.URL_ALL_MEETINGS);
 			return null;
 		}
+		
+		/*//TODO move this to JoinMeetingView and share calendar with all members rather than
+		 *       only the creator -> to avoid errors
+		try {
+			CalendarStuff.shareCalendar(meeting.members.get(meeting.members.size()-1).getEmail());
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}*/
 		
 		VerticalLayout layout = (VerticalLayout)super.InitUI();
 		
@@ -73,6 +83,7 @@ public class MeetingOverviewView extends ILoggedInView {
 		grid.setSelectionMode(SelectionMode.NONE);
 		layout.addComponent(grid);
 		
+		//TODO this logic (determining if creator or not) should be somewhere else
 		for (MeetingMember member : meeting.members) {
 			if (member.ID == Controllers.UserID && !member.access.equals(UserAccess.Member)) {
 				TextField emailField = new TextField();
@@ -99,6 +110,18 @@ public class MeetingOverviewView extends ILoggedInView {
 		Button finalize = new Button("Start vote");
 		finalize.addClickListener(e -> StartMeetingVote());
 		layout.addComponent(finalize);
+		
+		MeetingCalendar mCal = new MeetingCalendar(meeting);
+		mCal.setStartDate();
+		mCal.setEndDate();
+		mCal.setVisibleHours(6, 20);
+		try {
+			mCal.addTimeRanges(CalendarStuff.freeBusyQuery(meeting));
+		} catch (ParseException | IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		layout.addComponent(mCal.getCalendar());
 
 		return layout;
 	}
