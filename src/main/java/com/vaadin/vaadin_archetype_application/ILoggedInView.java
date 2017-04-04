@@ -5,6 +5,7 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Page;
 import com.vaadin.ui.AbstractLayout;
 import com.vaadin.ui.AbstractOrderedLayout;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI;
@@ -42,6 +43,7 @@ public abstract class ILoggedInView extends Panel implements View {
 		Button menu = new Button("Back to menu");
 		menu.addClickListener(e -> OnMenuButtonClick());
 		vl.addComponent(menu);
+		vl.setComponentAlignment(menu, Alignment.TOP_RIGHT);
 		
 		return vl;
 	}
