@@ -7,14 +7,14 @@ import org.vaadin.addon.oauthpopup.buttons.GoogleButton;
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import com.github.scribejava.core.model.OAuth2AccessToken;
 import com.github.scribejava.core.model.Token;
-//import com.github.scribejava.core.model.OAuth1AccessToken;
-//import com.github.scribejava.core.model.OAuth2AccessToken;
-//import com.github.scribejava.core.model.Token;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Page;
 import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.ui.Alignment;
+import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI;
@@ -27,6 +27,7 @@ public class LoginView extends Panel implements View {
 	protected Label lLoginRequired;
 
 	protected GoogleCredential credential;
+	private GridLayout grid;
 
 
 	@Override
@@ -45,6 +46,7 @@ public class LoginView extends Panel implements View {
 		layout = new VerticalLayout();
 		layout.setSpacing(true);
 		layout.setMargin(true);
+		grid = new GridLayout(5, 5);
 		
         String GGL_KEY = "955701574186-f8mole07i7gdb6mevst2hdbrq857sool.apps.googleusercontent.com";
         String GGL_SECRET = "NbQmw6H9iTi7i8KmC5FudO4p";
@@ -62,6 +64,8 @@ public class LoginView extends Panel implements View {
         ob = new GoogleButton(GGL_KEY, GGL_SECRET, "https://www.googleapis.com/auth/calendar "
         		+ "https://www.googleapis.com/auth/userinfo.email "
         		+ "https://www.googleapis.com/auth/userinfo.profile");
+        
+        ob.setCaption("Sign in with Google");
         
         ob.addOAuthListener(new OAuthListener() {
         	
@@ -119,17 +123,22 @@ public class LoginView extends Panel implements View {
 					OnUserLoggedIn();
 			});
         
-        layout.addComponent(ob);
+        grid.addComponent(ob, 2, 3);
+        grid.setComponentAlignment(ob, Alignment.MIDDLE_CENTER);
 
         //Show "login required" label when user is redirected from another page
         lLoginRequired = new Label("", ContentMode.HTML);
-        layout.addComponent(lLoginRequired);
+        grid.addComponent(lLoginRequired, 2, 4);
+        grid.setComponentAlignment(lLoginRequired, Alignment.MIDDLE_CENTER);
 		if (UI.getCurrent().getSession().getAttribute("loginRedirectTarget") != null)
 		{
 			lLoginRequired.setValue("<font color=\"red\"/>You need to be logged in to access this page");
 			ob.click();
 		}
-
+		
+		grid.setSizeFull();
+		layout.addComponent(grid);
+		
 		setContent(layout);
 	}
 	
