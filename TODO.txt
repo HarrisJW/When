@@ -3,3 +3,8 @@ Replace LoggedOnView with something more user-friendly
 FIX MEETING DURATION
 
 Meetings you have joined are not displayed in all-meetings
+
+
+
+My meetings navigates to meeting overview
+join meeting misbehaves

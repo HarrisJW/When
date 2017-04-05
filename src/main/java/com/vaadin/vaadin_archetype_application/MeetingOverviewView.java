@@ -121,6 +121,7 @@ public class MeetingOverviewView extends ILoggedInView {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		catch(Exception e1) {e1.printStackTrace();}
 		layout.addComponent(mCal.getCalendar());
 
 		return layout;
