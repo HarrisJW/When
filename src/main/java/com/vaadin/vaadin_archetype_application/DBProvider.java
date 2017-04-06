@@ -1,7 +1,6 @@
 package com.vaadin.vaadin_archetype_application;
 
 import java.sql.Connection;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
