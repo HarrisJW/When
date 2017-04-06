@@ -12,9 +12,12 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Page;
+import com.vaadin.server.Resource;
+import com.vaadin.server.ThemeResource;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI;
@@ -28,7 +31,7 @@ public class LoginView extends Panel implements View {
 
 	protected GoogleCredential credential;
 	private GridLayout grid;
-
+	private Resource res = new ThemeResource("img/office-336368_640.jpg");
 
 	@Override
 	public void enter(ViewChangeEvent event) {
@@ -136,8 +139,12 @@ public class LoginView extends Panel implements View {
 			ob.click();
 		}
 		
+		Image image = new Image(null, res);
+		grid.addComponent(image, 2, 1);
+		
 		grid.setSizeFull();
 		layout.addComponent(grid);
+		layout.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
 		
 		setContent(layout);
 	}
