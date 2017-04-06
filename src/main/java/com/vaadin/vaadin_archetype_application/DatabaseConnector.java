@@ -3,12 +3,9 @@ package com.vaadin.vaadin_archetype_application;
 import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.text.SimpleDateFormat;
-
 import com.google.api.client.util.DateTime;
 
 //Class responsible for fetching and uploading data to database
@@ -28,8 +25,9 @@ public class DatabaseConnector extends MySQLProvider {
 	{
 		try
 		{
-			if (connection == null || connection.isClosed())
+			if (connection == null || connection.isClosed()) {
 				connection = super.OpenConnection(conStr);
+			}
 			return connection;
 		}
 		catch (Exception e)
@@ -79,10 +77,10 @@ public class DatabaseConnector extends MySQLProvider {
 		{
 			ArrayList<Object[]> r = ExecuteStoredProcedureRead(connection, "joinMeeting", new Object[] { userID, meetingID, meetingPassword });
 			Object[] o = r.get(0);
-			return (int)(long)o[0];
+			return (int)(((BigInteger)o[0]).longValue());
 		}
 		catch (Exception e) 
-		{
+		{			
 			return Constants.CODE_INVALID_MEETING_ID_PASSWORD;
 		}
 	}
