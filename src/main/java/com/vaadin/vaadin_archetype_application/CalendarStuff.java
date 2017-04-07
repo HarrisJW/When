@@ -130,6 +130,8 @@ public class CalendarStuff {
 			for (int i = 1; i < userCalendars.size(); i++) 
 			{
 				currentUserCalendar = userCalendars.get(userIds.get(i));
+				if (currentUserCalendar.getBusy().size() == 0)
+					continue;
 				currentEarliestEvent = currentUserCalendar.getBusy().get(0);
 				
 				if (currentEarliestEvent.getStart().getValue() < earliestEvent.getStart().getValue()) 
