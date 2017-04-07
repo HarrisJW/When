@@ -84,7 +84,7 @@ public class LoggedOnView extends ILoggedInView {
 
 					@Override
 					public void buttonClick(ClickEvent event) {
-						UI.getCurrent().getNavigator().navigateTo(Constants.URL_MEETING_OVERVIEW);
+						UI.getCurrent().getNavigator().navigateTo(Constants.URL_ALL_MEETINGS);
 						
 					}
 		});

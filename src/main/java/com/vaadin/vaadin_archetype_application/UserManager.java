@@ -8,8 +8,14 @@ import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.plus.Plus;
 import com.google.api.services.plus.model.Person;
+import com.mysql.fabric.xmlrpc.base.Member;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.vaadin_archetype_application.MeetingMember.UserAccess;
 
 public final class UserManager {
 	private UserManager() { } //Thank you, Java, for not having static classes
@@ -70,5 +76,13 @@ public final class UserManager {
 	public static String GetUserID()
 	{
 		return GetGooglePersonInfo().getId().toString();
+	}
+	
+	public static MeetingMember.UserAccess GetCurerntUserMeetingAccess(Meeting meeting)
+	{
+		for (MeetingMember member : meeting.members)
+			if (member.ID == Controllers.UserID && !member.access.equals(UserAccess.Member))
+				return member.access;
+		return UserAccess.Member;
 	}
 }

@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
+import com.google.api.client.util.DateTime;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.AbstractLayout;
 import com.vaadin.ui.AbstractOrderedLayout;
@@ -24,10 +25,12 @@ import com.vaadin.ui.Grid.SelectionMode;
 // Meeting overview page
 public class MeetingOverviewView extends ILoggedInView {
 	
+	Meeting meeting;
+	
 	@Override
 	protected AbstractOrderedLayout InitUI()
 	{
-		Meeting meeting = (Meeting)UI.getCurrent().getSession().getAttribute("selectedMeeting");
+		meeting = (Meeting)UI.getCurrent().getSession().getAttribute("selectedMeeting");
 		if (meeting == null)
 		{
 			UI.getCurrent().getNavigator().navigateTo(Constants.URL_ALL_MEETINGS);
@@ -58,12 +61,12 @@ public class MeetingOverviewView extends ILoggedInView {
 		gl.addComponent(new Label(meeting.password), 1, row++);
 		
 		gl.addComponent(new Label("Meeting start date"), 0, row);
-		String s = new Date(meeting.startDate.getValue()).toString();
-		gl.addComponent(new Label(s.substring(0, s.indexOf(" "))), 1, row++);
+		//String s = new Date(meeting.startDate.getValue()).toString();
+		gl.addComponent(new Label(DateTimeToString(meeting.startDate)), 1, row++);
 		
 		gl.addComponent(new Label("Meeting end date"), 0, row);
-		s = new Date(meeting.endDate.getValue()).toString();
-		gl.addComponent(new Label(s.substring(0, s.indexOf(" "))), 1, row++);
+		//s = new Date(meeting.endDate.getValue()).toString();
+		gl.addComponent(new Label(DateTimeToString(meeting.endDate)), 1, row++);
 		
 		gl.addComponent(new Label("Meeting duration"), 0, row);
 		gl.addComponent(new Label(String.valueOf(meeting.duration / 60) + " minutes"), 1, row++);
@@ -83,28 +86,23 @@ public class MeetingOverviewView extends ILoggedInView {
 		grid.setSelectionMode(SelectionMode.NONE);
 		layout.addComponent(grid);
 		
-		//TODO this logic (determining if creator or not) should be somewhere else
-		for (MeetingMember member : meeting.members) {
-			if (member.ID == Controllers.UserID && !member.access.equals(UserAccess.Member)) {
-				TextField emailField = new TextField();
-				emailField.setInputPrompt("Enter users email to invite them...");
+		if (!UserManager.GetCurerntUserMeetingAccess(meeting).equals(UserAccess.Member)) {
+			TextField emailField = new TextField();
+			emailField.setInputPrompt("Enter users email to invite them...");
 
-				Button emailButton = new Button("Send Email",
-						new Button.ClickListener() {
+			Button emailButton = new Button("Send Email", new Button.ClickListener() {
 
-					@Override
-					public void buttonClick(ClickEvent event) {
-						Notification.show("Email sent");
-						EmailNotifier.sendCreationMail(emailField.getValue(), meeting.name, 
-								meeting.code, meeting.password);
-						emailField.clear();
-					}
+				@Override
+				public void buttonClick(ClickEvent event) {
+					Notification.show("Email sent");
+					EmailNotifier.sendCreationMail(emailField.getValue(), meeting.name, meeting.code, meeting.password);
+					emailField.clear();
+				}
 
-				});
+			});
 				
-				layout.addComponent(emailField);
-				layout.addComponent(emailButton);
-			}
+			layout.addComponent(emailField);
+			layout.addComponent(emailButton);
 		}
 		
 		Button finalize = new Button("Start vote");
@@ -115,6 +113,7 @@ public class MeetingOverviewView extends ILoggedInView {
 		mCal.setStartDate();
 		mCal.setEndDate();
 		mCal.setVisibleHours(6, 20);
+		mCal.clear();
 		try {
 			mCal.addTimeRanges(CalendarStuff.freeBusyQuery(meeting));
 		} catch (ParseException | IOException e1) {
@@ -123,13 +122,44 @@ public class MeetingOverviewView extends ILoggedInView {
 		}
 		catch(Exception e1) {e1.printStackTrace();}
 		layout.addComponent(mCal.getCalendar());
+		
+		if (UserManager.GetCurerntUserMeetingAccess(meeting).equals(UserAccess.Creator))
+		{
+			Button delete = new Button("Delete meeting");
+			delete.addClickListener(e -> DeleteMeeting());
+			layout.addComponent(delete);
+		}
+		else
+		{
+			Button delete = new Button("Leave meeting");
+			delete.addClickListener(e -> LeaveMeeting());
+			layout.addComponent(delete);
+		}
 
 		return layout;
+	}
+	
+	private String DateTimeToString(DateTime dt)
+	{
+		String s = new Date(dt.getValue()).toString();
+		return s.substring(0, s.indexOf(" ", 8)) + " " + s.substring(s.lastIndexOf(" "));
 	}
 	
 	private void StartMeetingVote()//TODO
 	{
 		
+	}
+	
+	private void DeleteMeeting()//TODO confirmation
+	{
+		Controllers.DatabaseConnector.DeleteMeeting(meeting.ID);
+		UI.getCurrent().getNavigator().navigateTo(Constants.URL_ALL_MEETINGS);
+	}
+	
+	private void LeaveMeeting()//TODO confirmation
+	{
+		Controllers.DatabaseConnector.LeaveMeeting(meeting.ID, Controllers.UserID);
+		UI.getCurrent().getNavigator().navigateTo(Constants.URL_ALL_MEETINGS);
 	}
 
 	@Override

@@ -36,6 +36,19 @@ public class DatabaseConnectorTest {
 		DBProvider dbc = new DatabaseConnector();
 		dbc.Initialize();
 		
+		/*
+		ArrayList<Object[]> a = dbc.ExecuteQuery(dbc.GetConnection(), "SELECT * FROM meeting;");// WHERE meeting_code = '1937a8';");
+		for (int i = 0; i < a.size(); i++)
+		{
+			for (int j = 0; j < a.get(i).length; j++)
+				System.out.print(a.get(i)[j].toString() + "\t");
+			System.out.println("");
+		}
+		
+		if (true)
+			return;
+		//*/
+		
 		assertEquals(true, dbc.Execute(dbc.GetConnection(), "DELETE FROM user WHERE cid = 'asdf@qwer.ty';"));
 		assertEquals(true, dbc.Execute(dbc.GetConnection(), "DELETE FROM user WHERE cid = '2asdf@qwer.ty';"));
 		

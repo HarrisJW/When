@@ -19,7 +19,7 @@ public class MeetingMember {
 		return firstName + " " + lastName;
 	}
 	
-	public String getEmail()
+	String getEmail()
 	{
 		return email;
 	}

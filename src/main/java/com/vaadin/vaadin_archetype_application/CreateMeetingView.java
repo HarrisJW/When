@@ -1,5 +1,9 @@
 package com.vaadin.vaadin_archetype_application;
 
+import java.time.Instant;
+import java.time.Year;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAmount;
 import java.util.Date;
 
 import com.vaadin.shared.ui.label.ContentMode;
@@ -85,6 +89,10 @@ public class CreateMeetingView extends ILoggedInView {
 		
 		layout.addComponent(gl);
 		
+		tbMeetingStartDate.addValueChangeListener(e -> UpdateStartEndDateLimits());
+		tbMeetingEndDate.addValueChangeListener(e -> UpdateStartEndDateLimits());
+		UpdateStartEndDateLimits();
+		
 		// Join meeting button
 		Button bCreate = new Button("Create meeting");
 		bCreate.addClickListener(e -> OnCreateMeetingButtonClicked());
@@ -94,6 +102,21 @@ public class CreateMeetingView extends ILoggedInView {
 		layout.addComponent(lErrorMessage);
 
 		return layout;
+	}
+	
+	private void UpdateStartEndDateLimits()
+	{
+		tbMeetingStartDate.setRangeStart(new Date());
+		
+		if (tbMeetingStartDate.getValue() != null)
+			tbMeetingEndDate.setRangeStart(tbMeetingStartDate.getValue());
+		else
+			tbMeetingEndDate.setRangeStart(new Date());
+		
+		if (tbMeetingEndDate.getValue() != null)
+			tbMeetingStartDate.setRangeEnd(tbMeetingEndDate.getValue());
+		else
+			tbMeetingStartDate.setRangeEnd(Date.from(Instant.now().plus(365 * 10, ChronoUnit.DAYS)));//screw java date
 	}
 
 	//Join meeting button click handler. Communicates with DB and changes state according to the return code
@@ -124,6 +147,12 @@ public class CreateMeetingView extends ILoggedInView {
 		if (duration <= 0)
 		{
 			setErrorMessage("Duration must be a positive number");
+			return;
+		}
+
+		if (tbMeetingStartDate.getValue() == null || tbMeetingEndDate.getValidators() == null)
+		{
+			setErrorMessage("Please select start and end dates");
 			return;
 		}
 		

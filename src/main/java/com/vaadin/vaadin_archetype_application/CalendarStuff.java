@@ -90,6 +90,7 @@ public class CalendarStuff {
 		public static void getAvailableTimeRanges()
 		{	
 			FreeBusyCalendar calendar;
+			availableTimePeriods.clear();
 			//there are still events 
 			while (!userCalendars.isEmpty())
 			{

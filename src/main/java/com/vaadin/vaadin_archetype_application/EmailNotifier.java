@@ -21,6 +21,7 @@ public class EmailNotifier {
 			text += "\nThere is no meeting password. Leave this field empty.";
 		else
 			text += "Meeting password: " + meetingPass;
+		text += "\nTo accept the invite, login to the WHEN app ( https://when-app.herokuapp.com ) and click \'Join meeting\'.";
 		Mailer.send("whenapp3130@gmail.com","csci3130",email,"WHEN Meeting Notification",text);
 	} 
 }

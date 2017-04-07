@@ -6,6 +6,7 @@ import java.util.List;
 import com.google.api.services.calendar.model.TimePeriod;
 import com.vaadin.ui.Calendar;
 import com.vaadin.ui.components.calendar.event.BasicEvent;
+import com.vaadin.ui.components.calendar.event.CalendarEvent;
 import com.vaadin.ui.components.calendar.event.EditableCalendarEvent;
 
 public class MeetingCalendar {
@@ -65,6 +66,14 @@ public class MeetingCalendar {
 			i++;
 		}
 	}
+	
+	public void clear()
+	{
+		List<CalendarEvent> a = cal.getEvents(startDate, endDate);
+		for (int i = 0; i < a.size(); i++)
+			cal.removeEvent(a.get(i));
+	}
+	
 	/*
 	public void addTimeSlot(TimePeriod tp)
 	{

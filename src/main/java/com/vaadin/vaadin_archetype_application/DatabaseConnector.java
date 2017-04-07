@@ -77,7 +77,7 @@ public class DatabaseConnector extends MySQLProvider {
 		{
 			ArrayList<Object[]> r = ExecuteStoredProcedureRead(connection, "joinMeeting", new Object[] { userID, meetingID, meetingPassword });
 			Object[] o = r.get(0);
-			return (int)(((BigInteger)o[0]).longValue());
+			return ((BigInteger)o[0]).intValue();
 		}
 		catch (Exception e) 
 		{			
