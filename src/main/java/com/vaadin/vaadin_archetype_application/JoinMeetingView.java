@@ -86,6 +86,11 @@ public class JoinMeetingView extends ILoggedInView {
 			System.out.println(code);
 			Meeting meeting = Controllers.DatabaseConnector.GetMeetingDescription(code);
 			System.out.println(meeting);
+			try {
+				CalendarStuff.shareCalendar(meeting.members.get(meeting.members.size() - 1).getEmail());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			UI.getCurrent().getSession().setAttribute("selectedMeeting", meeting);
 			UI.getCurrent().getNavigator().navigateTo(Constants.URL_MEETING_OVERVIEW);
 		}
