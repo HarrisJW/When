@@ -16,12 +16,13 @@ import javax.mail.internet.MimeMessage;
 public class EmailNotifier {
 	public static void sendCreationMail(String email, String meetingName, String meetingCode, String meetingPass) {    
 		String text = "You have been invited to meeting '" + meetingName +"'\n"
-				+ "Unique meeting code: " + meetingCode;
+				+ "Unique meeting code: " + meetingCode + "\n";
 		if (meetingPass.equals(""))
-			text += "\nThere is no meeting password. Leave this field empty.";
+			text += "There is no meeting password. Leave this field empty.";
 		else
 			text += "Meeting password: " + meetingPass;
-		text += "\nTo accept the invite, login to the WHEN app ( https://when-app.herokuapp.com ) and click \'Join meeting\'.";
+		
+		text += "\nTo accept the invite, login to the WHEN app ( https://when-app.herokuapp.com/#!join-meeting ) and enter details above when joining meeting.";
 		Mailer.send("whenapp3130@gmail.com","csci3130",email,"WHEN Meeting Notification",text);
 	} 
 }
