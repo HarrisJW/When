@@ -87,10 +87,10 @@ public class DatabaseConnectorTest {
 		System.out.println(md2.code);
 		
 		//Join meetings
-		assertNotSame(0, dbc.TryJoinMeeting(md2.code, "", uid1));
-		assertEquals(0, dbc.TryJoinMeeting(md2.code, "asdf", uid1));
-		assertNotSame(0, dbc.TryJoinMeeting(md2.code, "asdf", uid1));
-		assertNotSame(0, dbc.TryJoinMeeting(md1.code, "", uid1));
+		assertEquals(true, dbc.TryJoinMeeting(md2.code, "", uid1) < 0);
+		assertEquals(true, dbc.TryJoinMeeting(md2.code, "asdf", uid1) >= 0);
+		assertEquals(true, dbc.TryJoinMeeting(md2.code, "asdf", uid1) < 0);
+		assertEquals(true, dbc.TryJoinMeeting(md1.code, "", uid1) < 0);
 		
 		//Get meetings list
 		ArrayList<Meeting> msd = dbc.GetMeetingsList(uid1);
@@ -233,7 +233,7 @@ public class DatabaseConnectorTest {
 		assertNotSame(0, dbc.LeaveMeeting(mid2, uid2));
 
 		//Delete meetings
-		assertEquals(0, dbc.TryJoinMeeting(md2.code, "asdf", uid1));
+		assertEquals(true, dbc.TryJoinMeeting(md2.code, "asdf", uid1) > 0);
 		assertEquals(true, dbc.DeleteMeeting(mid1));
 		assertEquals(true, dbc.DeleteMeeting(mid2));
 		assertEquals(null, dbc.GetMeetingDescription(mid1));
