@@ -1,0 +1,183 @@
+-- MySQL dump 10.13  Distrib 5.7.17, for Linux (x86_64)
+--
+-- Host: localhost    Database: whenapp
+-- ------------------------------------------------------
+-- Server version	5.7.17-0ubuntu0.16.04.1
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `meeting`
+--
+
+DROP TABLE IF EXISTS `meeting`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `meeting` (
+  `mid` int(10) NOT NULL AUTO_INCREMENT,
+  `pass` varchar(12) DEFAULT NULL,
+  `firstDay` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `lastDay` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `meeting_code` char(6) NOT NULL,
+  `name` varchar(30) NOT NULL,
+  `create_date` datetime NOT NULL,
+  `last_modified` datetime NOT NULL,
+  `mlength` bigint(10) DEFAULT NULL,
+  `state` int(1) NOT NULL,
+  PRIMARY KEY (`mid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `meeting`
+--
+
+LOCK TABLES `meeting` WRITE;
+/*!40000 ALTER TABLE `meeting` DISABLE KEYS */;
+/*!40000 ALTER TABLE `meeting` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `time_range`
+--
+
+DROP TABLE IF EXISTS `time_range`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `time_range` (
+  `rid` int(10) NOT NULL AUTO_INCREMENT,
+  `uid` int(10) DEFAULT NULL,
+  `mid` int(10) NOT NULL,
+  `starttime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `endtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`rid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `time_range`
+--
+
+LOCK TABLES `time_range` WRITE;
+/*!40000 ALTER TABLE `time_range` DISABLE KEYS */;
+/*!40000 ALTER TABLE `time_range` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `time_slot`
+--
+
+DROP TABLE IF EXISTS `time_slot`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `time_slot` (
+  `sid` int(10) NOT NULL AUTO_INCREMENT,
+  `mid` int(10) DEFAULT NULL,
+  `starttime` datetime DEFAULT NULL,
+  `endtime` datetime DEFAULT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `time_slot`
+--
+
+LOCK TABLES `time_slot` WRITE;
+/*!40000 ALTER TABLE `time_slot` DISABLE KEYS */;
+/*!40000 ALTER TABLE `time_slot` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `timeslot_votes`
+--
+
+DROP TABLE IF EXISTS `timeslot_votes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `timeslot_votes` (
+  `sid` int(10) NOT NULL,
+  `uid` int(10) NOT NULL,
+  `vote` int(1) NOT NULL,
+  PRIMARY KEY (`sid`,`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `timeslot_votes`
+--
+
+LOCK TABLES `timeslot_votes` WRITE;
+/*!40000 ALTER TABLE `timeslot_votes` DISABLE KEYS */;
+/*!40000 ALTER TABLE `timeslot_votes` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `user`
+--
+
+DROP TABLE IF EXISTS `user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `user` (
+  `uid` int(10) NOT NULL AUTO_INCREMENT,
+  `cid` varchar(254) DEFAULT NULL,
+  `fname` varchar(162) DEFAULT NULL,
+  `lname` varchar(162) DEFAULT NULL,
+  `gid` varchar(23) DEFAULT NULL,
+  PRIMARY KEY (`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user`
+--
+
+LOCK TABLES `user` WRITE;
+/*!40000 ALTER TABLE `user` DISABLE KEYS */;
+/*!40000 ALTER TABLE `user` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `user_meeting`
+--
+
+DROP TABLE IF EXISTS `user_meeting`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `user_meeting` (
+  `uid` int(10) NOT NULL,
+  `mid` int(10) NOT NULL,
+  `access` int(1) DEFAULT NULL,
+  PRIMARY KEY (`uid`,`mid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user_meeting`
+--
+
+LOCK TABLES `user_meeting` WRITE;
+/*!40000 ALTER TABLE `user_meeting` DISABLE KEYS */;
+/*!40000 ALTER TABLE `user_meeting` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2017-04-10  0:12:12
